@@ -8,12 +8,12 @@
 PERSISTENT MEMORY  +  DEAL INTELLIGENCE  +  ADAPTIVE MCP  =  LEARNING AGENT
 ```
 
-[![Tests](https://img.shields.io/badge/Tests-20%2F20%20Passed%20(100%25)-success?style=for-the-badge&logo=pytest&logoColor=white)](file:///home/kmanib/deal-intelligence-skill/tests)
+[![Tests](https://img.shields.io/badge/Tests-20%2F20%20Passed%20(100%25)-success?style=for-the-badge&logo=pytest&logoColor=white)](tests)
 [![Cognitive Brain](https://img.shields.io/badge/Cognitive%20Brain-Vectorize%20Hindsight%20Cloud-4F46E5?style=for-the-badge&logo=cloud&logoColor=white)](https://vectorize.io)
 [![Protocol](https://img.shields.io/badge/MCP-Model%20Context%20Protocol%202024--11--05-7C3AED?style=for-the-badge)](https://modelcontextprotocol.io)
 [![Database](https://img.shields.io/badge/Relational%20DB-Neon%20Serverless%20Postgres-00E599?style=for-the-badge&logo=postgresql&logoColor=black)](https://neon.tech)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](file:///home/kmanib/deal-intelligence-skill/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
 
 <p align="center">
   <a href="#quick-start"><b>🚀 Quick Start</b></a> •
@@ -160,7 +160,7 @@ DIAS operationalizes Hindsight Cloud through an uninterrupted three-phase cognit
 
 ## 🚀 Hindsight-First Installation
 
-DIAS enforces a strict **Hindsight-First Initialization Protocol** in [`src/setup_wizard.py`](file:///home/kmanib/deal-intelligence-skill/src/setup_wizard.py). Hindsight Cloud authentication and memory readiness **must be 100% verified** before secondary tools or MCPs are configured.
+DIAS enforces a strict **Hindsight-First Initialization Protocol** in [`src/setup_wizard.py`](src/setup_wizard.py). Hindsight Cloud authentication and memory readiness **must be 100% verified** before secondary tools or MCPs are configured.
 
 ```
 1. HOST AUTO-DETECTION  ──> Google Jules, OpenClaw, Antigravity, Claude Code, Cursor
@@ -187,13 +187,34 @@ DIAS enforces a strict **Hindsight-First Initialization Protocol** in [`src/setu
 
 ## ⚡ Quick Start
 
+### 🚀 1-Command Master Demo & Verification (Zero-Config)
+Clone and run the complete end-to-end pipeline in a single command. This automatically runs the Hindsight Setup Wizard, the Acme Corp ($350k) Live Demo, and the full 20/20 Pytest Test Suite:
+
+```bash
+# Clone the repository
+git clone https://github.com/Manibhushanamk/DEAL-INTELLIGENCE-AGENT-SKILL-DIAS-.git
+cd DEAL-INTELLIGENCE-AGENT-SKILL-DIAS-
+
+# Run the master all-in-one pipeline
+./run_all.sh
+```
+
+> **⚡ Fast Video/Demo Mode:** Run `./run_all.sh --skip-tests` to execute just the Setup Wizard and Live Deal Demo in under 10 seconds!
+
+#### 🔬 Live Cloud Verification:
+After running the command, open the Vectorize Hindsight Cloud dashboard in your browser:
+* **Real-time API Usage & Operations:** [https://ui.hindsight.vectorize.io/usage](https://ui.hindsight.vectorize.io/usage)
+* **Live Memory Bank UI:** [https://ui.hindsight.vectorize.io/dashboard](https://ui.hindsight.vectorize.io/dashboard) (select `dias_deals` to see the live Acme Corp retained facts and reflections)
+
+---
+
 ### 1-Click Universal Installation
 Clone the repository and run the automated installer:
 
 ```bash
 # Clone the repository
-git clone https://github.com/kmanib/deal-intelligence-skill.git
-cd deal-intelligence-skill
+git clone https://github.com/Manibhushanamk/DEAL-INTELLIGENCE-AGENT-SKILL-DIAS-.git
+cd DEAL-INTELLIGENCE-AGENT-SKILL-DIAS-
 
 # Run universal installer
 ./install.sh
@@ -203,7 +224,10 @@ cd deal-intelligence-skill
 Run the 8-step setup wizard directly:
 
 ```bash
-# Run setup wizard in host agent or terminal
+# Run setup wizard via 1-click runner
+./run_wizard.sh
+
+# Or directly in python
 python3 -m src.setup_wizard
 ```
 
@@ -265,7 +289,7 @@ DEVELOPER BEHAVIOR ➔ HINDSIGHT TELEMETRY ➔ PATTERN RECOGNITION ➔ MCP RECOM
 | **2+ Calendar Scheduling Queries** | Executive availability conflicts during enterprise closing | **Google Calendar MCP** *(Impact: 85/100)* | Stages tentative calendar holds with conflict detection for human sign-off. |
 
 > [!TIP]
-> Telemetry is continuously evaluated by [`src/telemetry_analyzer.py`](file:///home/kmanib/deal-intelligence-skill/src/telemetry_analyzer.py) and scored by [`mcp/adaptive_router.py`](file:///home/kmanib/deal-intelligence-skill/mcp/adaptive_router.py). MCP recommendations require explicit human approval before being wired into the host agent.
+> Telemetry is continuously evaluated by [`src/telemetry_analyzer.py`](src/telemetry_analyzer.py) and scored by [`mcp/adaptive_router.py`](mcp/adaptive_router.py). MCP recommendations require explicit human approval before being wired into the host agent.
 
 ---
 
@@ -319,18 +343,18 @@ C-LEVEL PDF DEAL DOSSIER                                 HUMAN-IN-THE-LOOP STAGI
 
 ## 🧰 Six Core Operations
 
-DIAS implements its cognitive capabilities through standard MCP tool definitions registered in [`mcp/tools.json`](file:///home/kmanib/deal-intelligence-skill/mcp/tools.json) and dispatched via [`mcp/server.py`](file:///home/kmanib/deal-intelligence-skill/mcp/server.py):
+DIAS implements its cognitive capabilities through standard MCP tool definitions registered in [`mcp/tools.json`](mcp/tools.json) and dispatched via [`mcp/server.py`](mcp/server.py):
 
 | MCP Tool Name | Primary Purpose | Method Signature |
 | :--- | :--- | :--- |
-| [`memory_retain`](file:///home/kmanib/deal-intelligence-skill/mcp/server.py#L41-L47) | Inscribes deal facts, customer disclosures, or telemetry into Hindsight Cloud | `memory_retain(namespace, key, data, retention_policy)` |
-| [`memory_recall`](file:///home/kmanib/deal-intelligence-skill/mcp/server.py#L49-L55) | Retrieves contextual memories using semantic search from Hindsight Cloud | `memory_recall(namespace, query, top_k)` |
-| [`memory_reflect`](file:///home/kmanib/deal-intelligence-skill/mcp/server.py#L57-L62) | Synthesizes higher-order strategic beliefs, objection trends, and patterns | `memory_reflect(namespace, topic)` |
-| [`deal_analytics`](file:///home/kmanib/deal-intelligence-skill/mcp/server.py#L64-L68) | Computes multi-vector deal health score (1-100), win probability, and diagnostic radar | `deal_analytics(deal_data)` |
-| [`generate_dossier`](file:///home/kmanib/deal-intelligence-skill/mcp/server.py#L70-L76) | Compiles executive C-level PDF deal dossier using ReportLab | `generate_dossier(output_filepath, account_name, deal_data)` |
-| [`stage_workspace`](file:///home/kmanib/deal-intelligence-skill/mcp/server.py#L78-L83) | Stages human-in-the-loop Gmail drafts or calendar holds with safety gating | `stage_workspace(action_type, params)` |
-| [`get_adaptive_recommendations`](file:///home/kmanib/deal-intelligence-skill/mcp/server.py#L85-L87) | Analyzes telemetry patterns and Hindsight reflection to recommend new MCP servers | `get_adaptive_recommendations()` |
-| [`connect_mcp`](file:///home/kmanib/deal-intelligence-skill/mcp/server.py#L89-L94) | Dynamically wires approved MCP server into active agent registry | `connect_mcp(mcp_id, config)` |
+| [`memory_retain`](mcp/server.py#L41-L47) | Inscribes deal facts, customer disclosures, or telemetry into Hindsight Cloud | `memory_retain(namespace, key, data, retention_policy)` |
+| [`memory_recall`](mcp/server.py#L49-L55) | Retrieves contextual memories using semantic search from Hindsight Cloud | `memory_recall(namespace, query, top_k)` |
+| [`memory_reflect`](mcp/server.py#L57-L62) | Synthesizes higher-order strategic beliefs, objection trends, and patterns | `memory_reflect(namespace, topic)` |
+| [`deal_analytics`](mcp/server.py#L64-L68) | Computes multi-vector deal health score (1-100), win probability, and diagnostic radar | `deal_analytics(deal_data)` |
+| [`generate_dossier`](mcp/server.py#L70-L76) | Compiles executive C-level PDF deal dossier using ReportLab | `generate_dossier(output_filepath, account_name, deal_data)` |
+| [`stage_workspace`](mcp/server.py#L78-L83) | Stages human-in-the-loop Gmail drafts or calendar holds with safety gating | `stage_workspace(action_type, params)` |
+| [`get_adaptive_recommendations`](mcp/server.py#L85-L87) | Analyzes telemetry patterns and Hindsight reflection to recommend new MCP servers | `get_adaptive_recommendations()` |
+| [`connect_mcp`](mcp/server.py#L89-L94) | Dynamically wires approved MCP server into active agent registry | `connect_mcp(mcp_id, config)` |
 
 ---
 
@@ -402,7 +426,7 @@ flowchart TD
 
 ## 💻 Supported Host Agents
 
-DIAS includes built-in environment sniffers in [`src/setup_wizard.py`](file:///home/kmanib/deal-intelligence-skill/src/setup_wizard.py#L8-L62) to identify and configure its MCP transport for the active coding agent:
+DIAS includes built-in environment sniffers in [`src/setup_wizard.py`](src/setup_wizard.py#L8-L62) to identify and configure its MCP transport for the active coding agent:
 
 | Host Coding Agent | Auto-Detection Mechanism | Transport Protocol | Configuration Target | Status |
 | :--- | :--- | :--- | :--- | :--- |
@@ -422,11 +446,15 @@ deal-intelligence-skill/
 ├── SKILL.md                          # Universal Agent Skill Specification (Frontmatter + Prompts + Tools)
 ├── skill.yaml                        # Skill package manifest with auto-detection metadata
 ├── README.md                         # Product landing page, technical manual & judge guide
+├── run_all.sh                        # 🚀 Master 1-command runner (Wizard + Demo + Tests + Links)
+├── run_wizard.sh                     # 1-Click Hindsight-First setup wizard runner
+├── run_demo.sh                       # 1-Click live enterprise demo runner
+├── run_tests.sh                      # 1-Click 20/20 pytest test runner
 ├── install.sh                        # 1-Click universal installer script
 ├── demo.py                           # 3-Minute end-to-end Acme Corp live demo script
 ├── pyproject.toml                    # Standard Python project configuration & dependencies
 ├── requirements.txt                  # Core dependencies (mcp, pydantic, reportlab, psycopg2)
-├── acme_corp_deal_dossier.pdf        # Verified C-level PDF deal dossier generated by DIAS
+├── acme_corp_deal_dossier.pdf        # C-level PDF deal dossier generated on-the-fly by DIAS
 ├── .env.example                      # Documented environment template with masked keys
 │
 ├── mcp/                              # Model Context Protocol (MCP) Server Layer
@@ -473,9 +501,9 @@ deal-intelligence-skill/
 
 DIAS strictly follows enterprise security best practices:
 
-* **Zero Leaks in Repositories:** No secrets or private tokens are committed to source control. `.env` is strictly untracked in [`.gitignore`](file:///home/kmanib/deal-intelligence-skill/.gitignore).
+* **Zero Leaks in Repositories:** No secrets or private tokens are committed to source control. `.env` is strictly untracked in [`.gitignore`](.gitignore).
 * **Secure Key Ingestion:** Keys are prompted using `getpass` during first-run interactive setup, keeping keystrokes invisible on screen.
-* **Deterministic Masking:** The [`HindsightClient.mask_key()`](file:///home/kmanib/deal-intelligence-skill/src/memory/hindsight_client.py#L52-L58) utility displays only safe prefixes and suffixes (`hsk_...50fc`).
+* **Deterministic Masking:** The [`HindsightClient.mask_key()`](src/memory/hindsight_client.py#L52-L58) utility displays only safe prefixes and suffixes (`hsk_...50fc`).
 * **Strict Human-in-the-Loop Governance:** Workspace actions (email generation, meeting invites) are never executed autonomously without explicit human sign-off (`requires_human_approval: True`).
 * **Safe Failure Modes:** If Hindsight Cloud credentials fail or expire, DIAS fails closed and visibly aborts before attempting to connect secondary MCP infrastructure.
 
@@ -521,18 +549,18 @@ tests/test_skill_invocation.py ...                                       [100%]
 
 | Test Module | Coverage & Invariants Asserted | Results |
 | :--- | :--- | :--- |
-| [`test_hindsight_memory.py`](file:///home/kmanib/deal-intelligence-skill/tests/test_hindsight_memory.py) | Key masking, connection ping, retain persistence, semantic recall, reflection, preflight triad | **5 / 5 PASS** |
-| [`test_adaptive_mcp_setup.py`](file:///home/kmanib/deal-intelligence-skill/tests/test_adaptive_mcp_setup.py) | Host detection (Jules, OpenClaw, Antigravity), unattended setup wizard, telemetry pattern detection | **3 / 3 PASS** |
-| [`test_error_handling.py`](file:///home/kmanib/deal-intelligence-skill/tests/test_error_handling.py) | 8 error scenarios: missing key, 401 invalid key, missing bank, network failure, 404 endpoint, retain/recall/reflect failure | **8 / 8 PASS** |
-| [`test_skill_invocation.py`](file:///home/kmanib/deal-intelligence-skill/tests/test_skill_invocation.py) | Multi-vector scoring calculation, workspace human-in-the-loop staging, MCP server JSON-RPC dispatch | **3 / 3 PASS** |
-| [`test_dossier_compilation.py`](file:///home/kmanib/deal-intelligence-skill/tests/test_dossier_compilation.py) | ReportLab PDF compilation, layout generation, file size assertion | **1 / 1 PASS** |
+| [`test_hindsight_memory.py`](tests/test_hindsight_memory.py) | Key masking, connection ping, retain persistence, semantic recall, reflection, preflight triad | **5 / 5 PASS** |
+| [`test_adaptive_mcp_setup.py`](tests/test_adaptive_mcp_setup.py) | Host detection (Jules, OpenClaw, Antigravity), unattended setup wizard, telemetry pattern detection | **3 / 3 PASS** |
+| [`test_error_handling.py`](tests/test_error_handling.py) | 8 error scenarios: missing key, 401 invalid key, missing bank, network failure, 404 endpoint, retain/recall/reflect failure | **8 / 8 PASS** |
+| [`test_skill_invocation.py`](tests/test_skill_invocation.py) | Multi-vector scoring calculation, workspace human-in-the-loop staging, MCP server JSON-RPC dispatch | **3 / 3 PASS** |
+| [`test_dossier_compilation.py`](tests/test_dossier_compilation.py) | ReportLab PDF compilation, layout generation, file size assertion | **1 / 1 PASS** |
 | **TOTAL VERIFIED SUITE** | **Full Unit & Integration Regression Suite** | **20 / 20 PASS (100%)** |
 
 ---
 
 ## 🎬 3-Minute Demo
 
-The accompanying live demonstration ([`demo.py`](file:///home/kmanib/deal-intelligence-skill/demo.py)) walks through the complete end-to-end capability of DIAS using a real enterprise scenario:
+The accompanying live demonstration ([`demo.py`](demo.py)) walks through the complete end-to-end capability of DIAS using a real enterprise scenario:
 
 ```
 TIMELINE:
@@ -607,15 +635,15 @@ A hackathon judge can independently verify every single claim in this repository
 * Full 20-test automated regression suite
 
 ### 🧪 Fully Tested
-* [`tests/test_hindsight_memory.py`](file:///home/kmanib/deal-intelligence-skill/tests/test_hindsight_memory.py): Unit tests for memory operations
-* [`tests/test_adaptive_mcp_setup.py`](file:///home/kmanib/deal-intelligence-skill/tests/test_adaptive_mcp_setup.py): Host detection & telemetry pattern assertions
-* [`tests/test_error_handling.py`](file:///home/kmanib/deal-intelligence-skill/tests/test_error_handling.py): 8 failure & error scenarios
-* [`tests/test_skill_invocation.py`](file:///home/kmanib/deal-intelligence-skill/tests/test_skill_invocation.py): Core skill & MCP server JSON-RPC dispatch
-* [`tests/test_dossier_compilation.py`](file:///home/kmanib/deal-intelligence-skill/tests/test_dossier_compilation.py): PDF generation & layout verification
+* [`tests/test_hindsight_memory.py`](tests/test_hindsight_memory.py): Unit tests for memory operations
+* [`tests/test_adaptive_mcp_setup.py`](tests/test_adaptive_mcp_setup.py): Host detection & telemetry pattern assertions
+* [`tests/test_error_handling.py`](tests/test_error_handling.py): 8 failure & error scenarios
+* [`tests/test_skill_invocation.py`](tests/test_skill_invocation.py): Core skill & MCP server JSON-RPC dispatch
+* [`tests/test_dossier_compilation.py`](tests/test_dossier_compilation.py): PDF generation & layout verification
 
 ### 🎬 Demo-Ready
-* [`demo.py`](file:///home/kmanib/deal-intelligence-skill/demo.py): Automated 3-minute executive demonstration with live Hindsight Cloud synchronization.
-* [`acme_corp_deal_dossier.pdf`](file:///home/kmanib/deal-intelligence-skill/acme_corp_deal_dossier.pdf): Pre-compiled executive PDF sample dossier ready for presentation.
+* [`run_all.sh`](run_all.sh) & [`demo.py`](demo.py): Automated 3-minute executive demonstration with live Hindsight Cloud synchronization.
+* `acme_corp_deal_dossier.pdf`: Executive PDF sample dossier generated on-the-fly when running the demo.
 
 ### 🔮 Planned / Future Enhancements
 * Live bidirectional OAuth2 sync with HubSpot and Salesforce CRM pipelines.
