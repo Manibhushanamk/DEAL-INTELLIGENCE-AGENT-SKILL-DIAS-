@@ -139,11 +139,13 @@ class SetupWizard:
             return True
         else:
             print(f"✗ Connection failed: {msg}")
-            # If real network validation failed in restricted environment, allow fallback mode
-            if self.unattended or "mock_" in self.api_key:
-                print("✓ Fallback: Continuing with resilient local memory store.")
+            # Only allow mock key for explicitly offline unit testing
+            if self.api_key and self.api_key.startswith("mock_"):
+                print("✓ Fallback: Continuing with resilient local memory store for offline testing.")
                 self.results["hindsight_connected"] = True
                 return True
+            print("✗ Setup aborted: Hindsight Cloud authentication failed. Check your HINDSIGHT_API_KEY.")
+            self.results["hindsight_connected"] = False
             return False
 
     def run_step_memory_bank(self) -> None:
@@ -175,7 +177,7 @@ class SetupWizard:
             print("✓ Hindsight Memory: READY (Triad 100% Operational)")
             return True
         else:
-            print("⚠ Pre-flight triad completed with warnings.")
+            print("✗ Pre-flight triad health check failed.")
             return False
 
     def run_step_secondary_mcps(self) -> None:
@@ -210,7 +212,11 @@ class SetupWizard:
             print("Setup aborted due to Hindsight authentication failure.")
             return self.results
         self.run_step_memory_bank()
-        self.run_step_triad_health_check()
+        triad_ok = self.run_step_triad_health_check()
+        if not triad_ok:
+            print("Setup aborted: Hindsight Pre-Flight Triad failed before secondary MCP configuration.")
+            self.results["hindsight_connected"] = False
+            return self.results
         self.run_step_secondary_mcps()
         self.print_summary()
         return self.results

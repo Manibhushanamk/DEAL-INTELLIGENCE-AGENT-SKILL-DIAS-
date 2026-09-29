@@ -2,7 +2,7 @@ import pytest
 from src.memory.hindsight_client import HindsightClient
 
 def test_hindsight_key_masking():
-    assert HindsightClient.mask_key("hsk_ff125a48c73e436846c9d6a34bbfa062_eda0a61445cf5181") == "hsk_...5181"
+    assert HindsightClient.mask_key("hsk_mockkey1234567890abcdef12345678_9999") == "hsk_...9999"
     assert HindsightClient.mask_key(None) == "[NONE]"
     assert HindsightClient.mask_key("short") == "****"
 

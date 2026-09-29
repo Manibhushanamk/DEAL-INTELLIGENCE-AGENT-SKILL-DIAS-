@@ -68,25 +68,33 @@ class HindsightClient:
         if self.api_key.startswith("mock_"):
             return True, "Mock Hindsight mode validated for offline testing."
 
-        test_bank = "dias_preflight_ping"
-        url = f"{self.base_url}/v1/default/banks/{test_bank}"
+        # 1. Network & Health check
+        try:
+            health_req = urllib.request.Request(f"{self.base_url}/health")
+            with urllib.request.urlopen(health_req, timeout=8) as h_resp:
+                if h_resp.status != 200:
+                    return False, f"Hindsight Cloud health check returned status {h_resp.status}"
+        except Exception as e:
+            return False, f"Network connection failed to {self.base_url}: {str(e)}"
+
+        # 2. Authentication check via bank listing
+        url = f"{self.base_url}/v1/default/banks"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}"
         }
         try:
-            req_data = json.dumps({"name": "DIAS Connection Ping Bank"}).encode("utf-8")
-            req = urllib.request.Request(url, data=req_data, headers=headers, method="PUT")
-            with urllib.request.urlopen(req, timeout=8) as resp:
-                if resp.status in (200, 201):
+            req = urllib.request.Request(url, headers=headers, method="GET")
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                if resp.status == 200:
                     return True, "Successfully authenticated with Vectorize Hindsight Cloud."
                 return False, f"Hindsight Cloud returned unexpected status: {resp.status}"
         except urllib.error.HTTPError as e:
-            if e.code == 401 or e.code == 403:
+            if e.code in (401, 403):
                 return False, f"Authentication failed (HTTP {e.code}): Invalid Hindsight Cloud API key."
             return False, f"Hindsight Cloud HTTP Error: {e.code} - {e.reason}"
         except Exception as e:
-            return False, f"Connection failed to {self.base_url}: {str(e)}"
+            return False, f"Authentication request failed to {self.base_url}: {str(e)}"
 
     def _ensure_bank_exists(self, bank_id: str) -> None:
         """Idempotently ensures the memory bank is provisioned on Hindsight Cloud."""
@@ -101,7 +109,7 @@ class HindsightClient:
             }
             req_data = json.dumps({"name": f"DIAS Memory Bank - {bank_id}"}).encode("utf-8")
             req = urllib.request.Request(url, data=req_data, headers=headers, method="PUT")
-            with urllib.request.urlopen(req, timeout=6) as resp:
+            with urllib.request.urlopen(req, timeout=10) as resp:
                 if resp.status in (200, 201):
                     self._created_banks.add(bank_id)
         except Exception as e:
@@ -123,6 +131,7 @@ class HindsightClient:
 
         # 1. Hindsight Cloud persistence
         cloud_persisted = False
+        error_msg = None
         if self.api_key and not self.api_key.startswith("mock_"):
             try:
                 self._ensure_bank_exists(bank_id)
@@ -139,7 +148,8 @@ class HindsightClient:
                             "document_id": key,
                             "context": data.get("event_type", "dias_interaction")
                         }
-                    ]
+                    ],
+                    "async": False
                 }
                 req = urllib.request.Request(
                     url,
@@ -147,10 +157,13 @@ class HindsightClient:
                     headers=headers,
                     method="POST"
                 )
-                with urllib.request.urlopen(req, timeout=8) as resp:
+                with urllib.request.urlopen(req, timeout=20) as resp:
                     if resp.status in (200, 201):
-                        cloud_persisted = True
+                        res_json = json.loads(resp.read().decode("utf-8"))
+                        if res_json.get("success") is True:
+                            cloud_persisted = True
             except Exception as e:
+                error_msg = str(e)
                 logger.debug(f"[Hindsight Cloud] Cloud retain notice: {e}")
 
         # 2. Local resilient store
@@ -176,12 +189,16 @@ class HindsightClient:
                 "timestamp": data.get("timestamp", "")
             })
 
+        is_mock = bool(self.api_key and self.api_key.startswith("mock_"))
+        status_ok = cloud_persisted or is_mock
+
         return {
-            "status": "success",
+            "status": "success" if status_ok else "failed",
             "operation": "retain",
             "memory_bank_id": bank_id,
             "key": key,
-            "cloud_synced": cloud_persisted
+            "cloud_synced": cloud_persisted,
+            "error": None if status_ok else (error_msg or "Cloud retain unconfirmed")
         }
 
     def recall(
@@ -207,17 +224,31 @@ class HindsightClient:
                 }
                 req_data = json.dumps({"query": query}).encode("utf-8")
                 req = urllib.request.Request(url, data=req_data, headers=headers, method="POST")
-                with urllib.request.urlopen(req, timeout=8) as resp:
+                with urllib.request.urlopen(req, timeout=12) as resp:
                     if resp.status == 200:
                         res_json = json.loads(resp.read().decode("utf-8"))
                         raw_cloud = res_json.get("results", [])
                         for r in raw_cloud:
-                            if isinstance(r, dict) and "content" in r:
-                                cloud_results.append(r)
+                            if isinstance(r, dict):
+                                text_val = r.get("text") or r.get("content", "")
+                                cloud_results.append({
+                                    "id": r.get("id"),
+                                    "document_id": r.get("document_id"),
+                                    "content": text_val,
+                                    "text": text_val,
+                                    "context": r.get("context", ""),
+                                    "entities": r.get("entities", []),
+                                    "tags": r.get("tags", []),
+                                    "source": "hindsight_cloud"
+                                })
             except Exception as e:
                 logger.debug(f"[Hindsight Cloud] Cloud recall notice: {e}")
 
-        # Local semantic matching
+        # If live Hindsight Cloud returned results, return them directly
+        if cloud_results:
+            return cloud_results[:top_k]
+
+        # Fallback to local semantic matching for offline/mock environments
         entries = self._memory_store.get(bank_id, [])
         query_words = set(query.lower().split())
 
@@ -231,7 +262,7 @@ class HindsightClient:
         scored_entries.sort(key=lambda x: x[0], reverse=True)
         local_results = [item[1] for item in scored_entries[:top_k]]
 
-        return local_results if local_results else cloud_results
+        return local_results
 
     def reflect(
         self,
@@ -255,7 +286,7 @@ class HindsightClient:
                 }
                 req_data = json.dumps({"query": f"Consolidate key strategic patterns, risks, and insights regarding: {topic}"}).encode("utf-8")
                 req = urllib.request.Request(url, data=req_data, headers=headers, method="POST")
-                with urllib.request.urlopen(req, timeout=12) as resp:
+                with urllib.request.urlopen(req, timeout=20) as resp:
                     if resp.status == 200:
                         res_json = json.loads(resp.read().decode("utf-8"))
                         cloud_reflection = res_json.get("text")
@@ -275,14 +306,15 @@ class HindsightClient:
         if cloud_reflection and "not record any" not in cloud_reflection.lower():
             beliefs.append(cloud_reflection)
         
-        if categories:
-            beliefs.append(f"Account exhibits historical disclosures across: {', '.join(categories)}.")
-        if "budget" in categories:
-            beliefs.append("Pricing & ROI justification is required before contract finalization.")
-        if "technical" in categories:
-            beliefs.append("Architecture and SSO compliance verification are critical closing prerequisites.")
-        if "competitor" in categories:
-            beliefs.append("Active competitive evaluation detected; battlecard positioning recommended.")
+        if not beliefs:
+            if categories:
+                beliefs.append(f"Account exhibits historical disclosures across: {', '.join(categories)}.")
+            if "budget" in categories:
+                beliefs.append("Pricing & ROI justification is required before contract finalization.")
+            if "technical" in categories:
+                beliefs.append("Architecture and SSO compliance verification are critical closing prerequisites.")
+            if "competitor" in categories:
+                beliefs.append("Active competitive evaluation detected; battlecard positioning recommended.")
 
         if not beliefs:
             beliefs.append("Discovery phase active; ongoing knowledge synthesis across interactions.")
@@ -318,14 +350,26 @@ class HindsightClient:
         retain_ok = retain_res.get("status") == "success"
 
         # 2. Test Recall
-        recall_res = self.recall(memory_bank_id=bank_id, query="What compliance is validated in pre-flight?", top_k=1)
-        recall_ok = len(recall_res) > 0 or retain_ok
+        recall_res = self.recall(memory_bank_id=bank_id, query="What compliance is validated in pre-flight?", top_k=3)
+        recall_ok = len(recall_res) > 0
 
         # 3. Test Reflect
         reflect_res = self.reflect(memory_bank_id=bank_id, topic="compliance")
-        reflect_ok = reflect_res.get("status") == "success"
+        reflect_ok = reflect_res.get("status") == "success" and (
+            reflect_res.get("cloud_reflection") is not None or len(reflect_res.get("consolidated_beliefs", [])) > 0
+        )
 
         all_passed = retain_ok and recall_ok and reflect_ok
+
+        return {
+            "status": "PASSED" if all_passed else "FAILED",
+            "all_passed": all_passed,
+            "triad": {
+                "retain": {"passed": retain_ok, "details": retain_res},
+                "recall": {"passed": recall_ok, "results_count": len(recall_res)},
+                "reflect": {"passed": reflect_ok, "beliefs_count": len(reflect_res.get("consolidated_beliefs", []))}
+            }
+        }
 
         return {
             "status": "PASSED" if all_passed else "FAILED",
