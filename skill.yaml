@@ -1,0 +1,67 @@
+name: deal-intelligence-skill
+version: 1.0.0
+displayName: Deal Intelligence Agent Skill (DIAS)
+description: Self-configuring, Hindsight-powered cognitive skill that provides persistent memory, multi-vector deal intelligence, adaptive MCP recommendations, and executive dossier compilation for AI coding agents.
+author: HackwithHyderabad 3.0 Finale Team
+license: MIT
+entrypoint: src/core_skill.py
+installer: install.sh
+
+host_detection:
+  google_jules:
+    env_vars: ["JULES_AGENT", "GOOGLE_JULES_SESSION", "GOOGLE_CLOUD_PROJECT"]
+    config_path: ".jules/skills/"
+  openclaw:
+    env_vars: ["OPENCLAW_WORKSPACE", "OPENCLAW_VERSION"]
+    config_path: ".openclaw/plugins/"
+  google_antigravity:
+    env_vars: ["ANTIGRAVITY_CLI", "GEMINI_CLI_DIR"]
+    config_path: ".gemini/config/skills/"
+  claude_code:
+    env_vars: ["CLAUDE_CODE", "ANTHROPIC_AGENT"]
+    config_path: ".claude/skills/"
+  cursor:
+    env_vars: ["CURSOR_SESSION"]
+    config_path: ".cursor/skills/"
+
+foundational_service:
+  provider: Vectorize Hindsight Cloud
+  role: Cognitive Brain & Central Memory Layer
+  api_key_env: HINDSIGHT_API_KEY
+  base_url_env: HINDSIGHT_BASE_URL
+  default_base_url: "https://api.hindsight.vectorize.io"
+  health_check:
+    operations: ["retain", "recall", "reflect"]
+    required_pass: true
+
+secondary_mcps:
+  neon_postgresql:
+    recommended_trigger: "5+ database queries or architectural schemas"
+    status: optional
+  slack:
+    recommended_trigger: "team collaboration or urgent deal escalation mentions"
+    status: optional
+  google_workspace:
+    recommended_trigger: "stage follow-up email or calendar invitation"
+    status: optional
+  github:
+    recommended_trigger: "repository audit or issue tracking"
+    status: optional
+
+tools:
+  - name: memory_retain
+    description: Stores deal facts, meeting disclosures, and user telemetry in Hindsight Cloud memory banks.
+  - name: memory_recall
+    description: Retrieves contextual historical deal memories and interaction telemetry using semantic recall.
+  - name: memory_reflect
+    description: Synthesizes high-order strategic beliefs, objection patterns, and friction insights from accumulated memories.
+  - name: deal_analytics
+    description: Calculates multi-vector deal health score (1-100), win probability, stakeholder coverage, and momentum.
+  - name: generate_dossier
+    description: Compiles a C-level executive PDF deal dossier complete with SWOT, scoring radar, and risk mitigation roadmap.
+  - name: stage_workspace
+    description: Stages Gmail follow-up drafts and Calendar invitations with human-in-the-loop review.
+  - name: get_adaptive_recommendations
+    description: Analyzes reflection insights to suggest high-leverage MCP connections tailored to ongoing user workflows.
+  - name: connect_mcp
+    description: Dynamically wires approved MCP servers into host agent settings.

@@ -1,0 +1,155 @@
+[
+  {
+    "name": "memory_retain",
+    "description": "Inscribes deal facts, customer disclosures, transcripts, or telemetry events into Vectorize Hindsight Cloud persistent memory.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "default": "dias_deals",
+          "description": "Memory namespace or bank ID (e.g. dias_deals or dias_telemetry)"
+        },
+        "key": {
+          "type": "string",
+          "description": "Unique key or document identifier"
+        },
+        "data": {
+          "type": "object",
+          "description": "Structured payload or dictionary containing content, event_type, and disclosures"
+        },
+        "retention_policy": {
+          "type": "string",
+          "default": "persistent",
+          "description": "Retention policy (persistent, temporary, telemetry_log)"
+        }
+      },
+      "required": ["key", "data"]
+    }
+  },
+  {
+    "name": "memory_recall",
+    "description": "Retrieves high-precision contextual memories matching the query using semantic search from Hindsight Cloud.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "default": "dias_deals",
+          "description": "Memory namespace or bank ID"
+        },
+        "query": {
+          "type": "string",
+          "description": "Natural language question or search query"
+        },
+        "top_k": {
+          "type": "integer",
+          "default": 5,
+          "description": "Maximum number of memory items to retrieve"
+        }
+      },
+      "required": ["query"]
+    }
+  },
+  {
+    "name": "memory_reflect",
+    "description": "Synthesizes high-order strategic beliefs, objection trends, and operational patterns across accumulated memories.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "default": "dias_deals",
+          "description": "Memory namespace or bank ID"
+        },
+        "topic": {
+          "type": "string",
+          "default": "deal_strategy",
+          "description": "Strategic topic to synthesize beliefs about"
+        }
+      }
+    }
+  },
+  {
+    "name": "deal_analytics",
+    "description": "Calculates multi-vector deal health score (1-100), win probability, stakeholder coverage, and momentum velocity.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "deal_data": {
+          "type": "object",
+          "description": "Deal parameters including deal_id, customer, amount, stage, stakeholders, and notes",
+          "required": ["deal_id", "customer"]
+        }
+      },
+      "required": ["deal_data"]
+    }
+  },
+  {
+    "name": "generate_dossier",
+    "description": "Compiles a C-level executive PDF deal dossier complete with SWOT, scoring radar, and risk mitigation roadmap.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "output_filepath": {
+          "type": "string",
+          "description": "Path where the generated PDF will be saved"
+        },
+        "account_name": {
+          "type": "string",
+          "description": "Name of client or account"
+        },
+        "deal_data": {
+          "type": "object",
+          "description": "Detailed deal metadata and parameters"
+        }
+      },
+      "required": ["output_filepath", "account_name", "deal_data"]
+    }
+  },
+  {
+    "name": "stage_workspace",
+    "description": "Safely stages Gmail follow-up email drafts or Google Calendar meeting holds with mandatory human-in-the-loop approval.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "action_type": {
+          "type": "string",
+          "enum": ["email", "calendar"],
+          "description": "Workspace action type to stage"
+        },
+        "params": {
+          "type": "object",
+          "description": "Action parameters (recipient, subject, body, or title, attendees, duration, time)"
+        }
+      },
+      "required": ["action_type", "params"]
+    }
+  },
+  {
+    "name": "get_adaptive_recommendations",
+    "description": "Analyzes reflection insights to suggest high-leverage MCP connections tailored to ongoing user workflows.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "connect_mcp",
+    "description": "Dynamically connects approved MCP servers into host agent settings.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "mcp_id": {
+          "type": "string",
+          "description": "Identifier of the MCP server to connect (e.g. neon_postgresql, slack, google_calendar)"
+        },
+        "config": {
+          "type": "object",
+          "description": "Optional configuration parameters for the MCP server"
+        }
+      },
+      "required": ["mcp_id"]
+    }
+  }
+]
