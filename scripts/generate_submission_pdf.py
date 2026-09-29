@@ -1,5 +1,6 @@
 """
 Script to generate the HackwithHyderabad Final Submission Dossier & Video Guide PDF.
+Includes complete step-by-step commands and screening guidance for the demo.
 """
 
 import os
@@ -36,7 +37,7 @@ class NumberedCanvas(canvas.Canvas):
         
         # Header (Pages > 1)
         if self._pageNumber > 1:
-            self.drawString(54, 11 * inch - 36, "HACKWITHHYDERABAD 2026 — FINAL SUBMISSION DOSSIER & VIDEO GUIDE")
+            self.drawString(54, 11 * inch - 36, "HACKWITHHYDERABAD 2026 — FINAL SUBMISSION DOSSIER & VIDEO RUNBOOK")
             self.drawRightString(8.5 * inch - 54, 11 * inch - 36, "DIAS • DEAL INTELLIGENCE AGENT SKILL")
             self.setStrokeColor(colors.HexColor("#CBD5E1"))
             self.setLineWidth(0.5)
@@ -72,15 +73,16 @@ def build_pdf(filename):
     c_purple = colors.HexColor("#7C3AED")     # Purple
     c_dark = colors.HexColor("#1E293B")
     c_light = colors.HexColor("#F8FAFC")
-    c_border = colors.HexColor("#E2E8F0")
+    c_border = colors.HexColor("#CBD5E1")
+    c_code_bg = colors.HexColor("#F1F5F9")
 
     # Typography styles
     title_style = ParagraphStyle(
         'DocTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=22,
-        leading=26,
+        fontSize=20,
+        leading=24,
         textColor=c_primary,
         alignment=0,
         spaceAfter=4
@@ -90,21 +92,21 @@ def build_pdf(filename):
         'DocSubtitle',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=11,
-        leading=15,
+        fontSize=10,
+        leading=14,
         textColor=c_accent,
-        spaceAfter=14
+        spaceAfter=10
     )
 
     h1_style = ParagraphStyle(
         'Heading1_Custom',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=14,
-        leading=18,
+        fontSize=13,
+        leading=17,
         textColor=c_primary,
-        spaceBefore=12,
-        spaceAfter=6,
+        spaceBefore=10,
+        spaceAfter=5,
         keepWithNext=True
     )
 
@@ -112,11 +114,11 @@ def build_pdf(filename):
         'Heading2_Custom',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=11,
+        fontSize=10.5,
         leading=14,
         textColor=c_accent,
-        spaceBefore=10,
-        spaceAfter=4,
+        spaceBefore=8,
+        spaceAfter=3,
         keepWithNext=True
     )
 
@@ -124,10 +126,10 @@ def build_pdf(filename):
         'Body_Custom',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=9,
-        leading=13,
+        fontSize=8.5,
+        leading=12,
         textColor=c_dark,
-        spaceAfter=6
+        spaceAfter=5
     )
 
     body_bold = ParagraphStyle(
@@ -140,8 +142,8 @@ def build_pdf(filename):
         'Callout',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=8.5,
-        leading=12,
+        fontSize=8,
+        leading=11.5,
         textColor=colors.HexColor("#1E3A8A"),
         spaceAfter=0
     )
@@ -149,18 +151,27 @@ def build_pdf(filename):
     code_style = ParagraphStyle(
         'CodeStyle',
         parent=styles['Normal'],
-        fontName='Courier',
+        fontName='Courier-Bold',
         fontSize=8,
-        leading=10,
+        leading=10.5,
         textColor=colors.HexColor("#0F172A")
+    )
+
+    code_comment = ParagraphStyle(
+        'CodeComment',
+        parent=styles['Normal'],
+        fontName='Courier',
+        fontSize=7.5,
+        leading=9.5,
+        textColor=colors.HexColor("#64748B")
     )
 
     th_style = ParagraphStyle(
         'TH',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=8.5,
-        leading=11,
+        fontSize=8,
+        leading=10.5,
         textColor=colors.white
     )
 
@@ -168,8 +179,8 @@ def build_pdf(filename):
         'TD',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=8,
-        leading=11,
+        fontSize=7.5,
+        leading=10.5,
         textColor=c_dark
     )
 
@@ -182,9 +193,9 @@ def build_pdf(filename):
     story = []
 
     # ================= PAGE 1: TITLE & SUBMISSION FORM CHEAT SHEET =================
-    story.append(Paragraph("HACKWITHHYDERABAD 2026 — FINAL SUBMISSION", title_style))
+    story.append(Paragraph("HACKWITHHYDERABAD 2026 — FINAL SUBMISSION DOSSIER", title_style))
     story.append(Paragraph("<b>Project:</b> Deal Intelligence Agent Skill (DIAS) | <b>Cognitive Brain:</b> Vectorize Hindsight Cloud", subtitle_style))
-    story.append(HRFlowable(width="100%", thickness=1.5, color=c_accent, spaceBefore=0, spaceAfter=10))
+    story.append(HRFlowable(width="100%", thickness=1.5, color=c_accent, spaceBefore=0, spaceAfter=8))
 
     # Alert Box
     alert_data = [[
@@ -197,13 +208,13 @@ def build_pdf(filename):
     alert_table.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#EFF6FF")),
         ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#93C5FD")),
-        ('LEFTPADDING', (0,0), (-1,-1), 10),
-        ('RIGHTPADDING', (0,0), (-1,-1), 10),
-        ('TOPPADDING', (0,0), (-1,-1), 8),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+        ('LEFTPADDING', (0,0), (-1,-1), 8),
+        ('RIGHTPADDING', (0,0), (-1,-1), 8),
+        ('TOPPADDING', (0,0), (-1,-1), 6),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
     ]))
     story.append(alert_table)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 8))
 
     story.append(Paragraph("📋 Official Google Form Submission Fields (Copy-Paste Directory)", h1_style))
     story.append(Paragraph("Open the final submission form at <b>https://forms.gle/cD7fCnPnkdVm2sH78</b> and fill with these exact details:", body_style))
@@ -215,25 +226,25 @@ def build_pdf(filename):
         [Paragraph("<b>Team Name *</b>", td_style), Paragraph("<i>[Enter your exact registered Team Name as entered during registration]</i>", td_style)],
         [Paragraph("<b>Team Members *</b>", td_style), Paragraph("<i>[List full legal names of all team members, e.g., Manibhushanam K, ...]</i>", td_style)],
         [Paragraph("<b>GitHub Repository Link *</b>", td_style), Paragraph("<b>https://github.com/Manibhushanamk/DEAL-INTELLIGENCE-AGENT-SKILL-DIAS-</b>", td_style)],
-        [Paragraph("<b>Social Media Post (LinkedIn) *</b>", td_style), Paragraph("Paste the public URL of your LinkedIn post (Use Section 3 of this document for exact copy).", td_style)],
-        [Paragraph("<b>Article Link *</b>", td_style), Paragraph("Paste your published Dev.to / Medium / Hashnode article URL (Use Section 4 for complete text).", td_style)],
-        [Paragraph("<b>Video Link *</b>", td_style), Paragraph("Paste your public YouTube demo video URL (Use Section 2 for complete second-by-second script).", td_style)],
-        [Paragraph("<b>Reddit Post Link *</b>", td_style), Paragraph("Paste your published link from <i>r/aiagents</i> or <i>r/aimemory</i> (Use Section 5 for copy).", td_style)],
-        [Paragraph("<b>FEEDBACK *</b>", td_style), Paragraph("Copy the comprehensive organizer feedback provided in Section 6 of this dossier.", td_style)]
+        [Paragraph("<b>Social Media Post (LinkedIn) *</b>", td_style), Paragraph("Paste the public URL of your LinkedIn post (Use Section 4 of this document for exact copy).", td_style)],
+        [Paragraph("<b>Article Link *</b>", td_style), Paragraph("Paste your published Dev.to / Medium / Hashnode article URL (Use Section 5 for complete text).", td_style)],
+        [Paragraph("<b>Video Link *</b>", td_style), Paragraph("Paste your public YouTube demo video URL (Use Section 2 & 3 for full command runbook & script).", td_style)],
+        [Paragraph("<b>Reddit Post Link *</b>", td_style), Paragraph("Paste your published link from <i>r/aiagents</i> or <i>r/aimemory</i> (Use Section 6 for copy).", td_style)],
+        [Paragraph("<b>FEEDBACK *</b>", td_style), Paragraph("Copy the comprehensive organizer feedback provided in Section 7 of this dossier.", td_style)]
     ]
     form_table = Table(form_rows, colWidths=[2.2 * inch, 4.8 * inch])
     form_table.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), c_primary),
         ('ALIGN', (0,0), (-1,-1), 'LEFT'),
         ('GRID', (0,0), (-1,-1), 0.5, c_border),
-        ('LEFTPADDING', (0,0), (-1,-1), 6),
-        ('RIGHTPADDING', (0,0), (-1,-1), 6),
-        ('TOPPADDING', (0,0), (-1,-1), 4),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+        ('LEFTPADDING', (0,0), (-1,-1), 5),
+        ('RIGHTPADDING', (0,0), (-1,-1), 5),
+        ('TOPPADDING', (0,0), (-1,-1), 3),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
         ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, c_light]),
     ]))
     story.append(form_table)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 8))
 
     story.append(Paragraph("🏆 Project Identity & Technical Highlights", h1_style))
     highlight_text = (
@@ -246,14 +257,139 @@ def build_pdf(filename):
 
     story.append(PageBreak())
 
-    # ================= PAGE 2 & 3: MASTER VIDEO SCREENING & SCRIPT GUIDE =================
-    story.append(Paragraph("🎬 3-Minute Video Demo — Complete Screening & Dialogue Guide", h1_style))
+    # ================= PAGE 2 & 3: STEP-BY-STEP DEMO RUNBOOK (COMMANDS & GUIDANCE) =================
+    story.append(Paragraph("💻 Step-by-Step Demo Execution Runbook (Commands & Guidance)", h1_style))
     story.append(Paragraph(
-        "<b>Video Goal:</b> Deliver a crisp, confident, 1080p screen-recorded walkthrough (2 to 3 minutes) demonstrating "
-        "how DIAS transforms a stateless coding agent into an evolving deal intelligence copilot using Vectorize Hindsight Cloud.", body_style))
+        "Follow this exact command-by-command guide to run, demonstrate, and record the live DIAS system. "
+        "Every single step includes the terminal command to execute, expected on-screen behavior, and what to highlight to judges.", body_style))
+    story.append(Spacer(1, 6))
+
+    # Pre-flight Checklist Box
+    preflight_box = [[
+        Paragraph("<b>PRE-FLIGHT RECORDING SETUP:</b><br/>"
+                  "1. Open Terminal with font size <b>16pt+</b> so text is crisp on 1080p video.<br/>"
+                  "2. Have your web browser open to <b>https://ui.hindsight.vectorize.io/dashboard</b>.<br/>"
+                  "3. Ensure PDF reader (Evince/Preview) is ready to display <code>acme_corp_deal_dossier.pdf</code>.", callout_style)
+    ]]
+    pf_table = Table(preflight_box, colWidths=[7.0 * inch])
+    pf_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#FEF3C7")),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#FCD34D")),
+        ('LEFTPADDING', (0,0), (-1,-1), 8),
+        ('RIGHTPADDING', (0,0), (-1,-1), 8),
+        ('TOPPADDING', (0,0), (-1,-1), 6),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+    ]))
+    story.append(pf_table)
+    story.append(Spacer(1, 8))
+
+    def make_command_card(step_num, title, cmd_text, expected_output, guidance_text):
+        card_content = []
+        card_content.append(Paragraph(f"<b>STEP {step_num}: {title}</b>", h2_style))
+        
+        # Command Box
+        cmd_p = Paragraph(f"<b>$</b> <code>{cmd_text}</code>", code_style)
+        cmd_table = Table([[cmd_p]], colWidths=[6.8 * inch])
+        cmd_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,-1), c_code_bg),
+            ('BOX', (0,0), (-1,-1), 0.5, c_border),
+            ('LEFTPADDING', (0,0), (-1,-1), 6),
+            ('RIGHTPADDING', (0,0), (-1,-1), 6),
+            ('TOPPADDING', (0,0), (-1,-1), 4),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+        ]))
+        card_content.append(cmd_table)
+        card_content.append(Spacer(1, 4))
+        
+        # Details
+        details_p = Paragraph(
+            f"<b>Expected Output:</b> <i>{expected_output}</i><br/>"
+            f"<b>Guidance & Voiceover Cue:</b> {guidance_text}", body_style)
+        card_content.append(details_p)
+        card_content.append(Spacer(1, 6))
+        return card_content
+
+    # Step 0: Activate Env
+    for flowable in make_command_card(
+        0, "Activate Environment & Verify Directory",
+        "cd /home/kmanib/deal-intelligence-skill && source /home/kmanib/deal-intelligence-agent/venv/bin/activate",
+        "Terminal prompt updates with active virtualenv. Working directory confirmed at repo root.",
+        "Ensure virtual environment is active before running scripts. Clears terminal clutter for clean recording."
+    ):
+        story.append(flowable)
+
+    # Step 1: Run Setup Wizard
+    for flowable in make_command_card(
+        1, "Run 8-Step Hindsight-First Setup Wizard",
+        "python3 -m src.setup_wizard",
+        "Auto-detects host coding agent (Jules/OpenClaw/Antigravity), performs live Hindsight Cloud ping with masked key (hsk_...50fc), provisions memory banks (dias_deals, dias_telemetry), and passes Pre-Flight Triad (Retain, Recall, Reflect: 100% PASS).",
+        "Highlight that DIAS enforces a strict Hindsight-First initialization rule. If memory is not verified, secondary tools are not configured."
+    ):
+        story.append(flowable)
+
+    # Step 2: Live Hindsight Cloud Sanity Check
+    for flowable in make_command_card(
+        2, "Verify Real Live Hindsight Cloud Connection (Zero Mocks)",
+        "python3 scripts/verify_hindsight_live.py",
+        "Direct REST connection to https://api.hindsight.vectorize.io. Synchronously executes Retain, Memory Persistence Verification in bank 'dias_deals', Semantic Recall vector search, and LLM Reflection.",
+        "Emphasize to the judge that this proves the integration is genuine, live, and communicating with Vectorize Hindsight Cloud in production."
+    ):
+        story.append(flowable)
+
+    story.append(PageBreak())
+
+    # Step 3: Run the Live Enterprise Demo
+    for flowable in make_command_card(
+        3, "Execute 3-Minute Live Enterprise Demo (Acme Corp Scenario)",
+        "python3 demo.py",
+        "8-Part execution trace: 1) Host Handshake, 2) Inscribes Acme Corp $350k disclosures (GovCloud, SAML Okta, SOC2), 3) Zero-hallucination semantic Recall, 4) Multi-vector deal health scoring (85.0/100, 78.2% win probability), 5) Hindsight Reflect on Gong.io competitor claims, 6) Telemetry Analyzer detects 3+ SQL queries and proactively recommends Neon PostgreSQL MCP (Impact: 95/100), 7) Generates executive PDF dossier, 8) Stages human-in-the-loop email drafts.",
+        "This is the core highlight of your demo video! Zoom in on the deal score (85.0) and the moment DIAS learns what tool it needs by analyzing telemetry friction."
+    ):
+        story.append(flowable)
+
+    # Step 4: Inspect Generated PDF Dossier
+    for flowable in make_command_card(
+        4, "Inspect Generated C-Level PDF Deal Dossier",
+        "ls -lh acme_corp_deal_dossier.pdf && xdg-open acme_corp_deal_dossier.pdf",
+        "Shows compiled 6,224-byte 2-page PDF document featuring executive summary, 4 diagnostic radar bars (Momentum 24, Stakeholder 20, Technical 22, Commercial 19), SWOT analysis, and Hindsight reflections.",
+        "Show the judge that DIAS does not just dump text into a CLI; it outputs publication-grade deliverables ready for VP Sales and CRO review."
+    ):
+        story.append(flowable)
+
+    # Step 5: Verify Hindsight Cloud Web Dashboard
+    for flowable in make_command_card(
+        5, "Show Live Memories in Hindsight Cloud Dashboard",
+        "Navigate browser to: https://ui.hindsight.vectorize.io/dashboard",
+        "Memory Bank 'dias_deals' shows newly inscribed Acme Corp security mandates, content hashes, and vector embeddings in real time.",
+        "Switch to your browser tab for 10-15 seconds. This provides visual proof that the memory truly lives in Vectorize Hindsight Cloud."
+    ):
+        story.append(flowable)
+
+    # Step 6: Run Regression Test Suite
+    for flowable in make_command_card(
+        6, "Run Full Automated Regression Test Suite",
+        "pytest -v",
+        "20 passed in 44.43s (100% PASS across 5 test modules).",
+        "Show terminal running tests. Proves full regression coverage across memory, adaptive router, error resilience, and skill invocation."
+    ):
+        story.append(flowable)
+
+    # Step 7: Run Error Handling Suite
+    for flowable in make_command_card(
+        7, "Verify Error Handling & Failure Resilience",
+        "python3 scripts/test_error_handling.py",
+        "8 out of 8 failure scenarios pass: invalid keys (401), missing banks, network dropouts, 404 endpoints, and graceful fallbacks.",
+        "Demonstrates that DIAS handles network disconnects and credential failures gracefully without crashing."
+    ):
+        story.append(flowable)
+
+    story.append(PageBreak())
+
+    # ================= PAGE 4: MASTER VIDEO SCREENING & SCRIPT GUIDE =================
+    story.append(Paragraph("🎬 3-Minute Video Demo — Dialogue & Screening Script", h1_style))
     story.append(Paragraph(
-        "<b>Recording Setup:</b> Open terminal with font size 16+, browser tab on Hindsight Cloud Dashboard (<code>https://ui.hindsight.vectorize.io/dashboard</code>), "
-        "and PDF reader ready to open <code>acme_corp_deal_dossier.pdf</code>.", body_style))
+        "<b>Video Goal:</b> Deliver a crisp, confident screen-recorded walkthrough (2 to 3 minutes) matching the exact "
+        "commands above with engaging voiceover narration.", body_style))
     story.append(Spacer(1, 6))
 
     video_table_data = [
@@ -362,7 +498,7 @@ def build_pdf(filename):
 
     story.append(PageBreak())
 
-    # ================= PAGE 4: SOCIAL MEDIA (LINKEDIN & REDDIT) =================
+    # ================= PAGE 5: SOCIAL MEDIA (LINKEDIN & REDDIT) =================
     story.append(Paragraph("📱 Official Social Media Posts (LinkedIn & Reddit)", h1_style))
     story.append(Paragraph("<b>STRICT COMPLIANCE NOTICE:</b> Zero mentions of the word 'hackathon' anywhere in title, body, or hashtags.", callout_style))
     story.append(Spacer(1, 8))
@@ -435,7 +571,7 @@ def build_pdf(filename):
 
     story.append(PageBreak())
 
-    # ================= PAGE 5 & 6: COMPLETE TECHNICAL ARTICLE =================
+    # ================= PAGE 6 & 7: COMPLETE TECHNICAL ARTICLE =================
     story.append(Paragraph("📰 Official Technical Article (800–1,500 Words)", h1_style))
     story.append(Paragraph("<b>Publish Platforms:</b> Medium, Dev.to, Hashnode, Substack, or LinkedIn Articles.<br/>"
                            "<b>Pre-Submit Guarantee:</b> ZERO mentions of 'hackathon', real codebase snippets, before/after analysis, Hindsight Cloud links.", callout_style))
@@ -543,7 +679,7 @@ def build_pdf(filename):
 
     story.append(PageBreak())
 
-    # ================= PAGE 7: COMPETITION FEEDBACK & VERIFICATION APPENDIX =================
+    # ================= PAGE 8: COMPETITION FEEDBACK & VERIFICATION APPENDIX =================
     story.append(Paragraph("💬 Official Organizer Feedback & Technical Appendix", h1_style))
     story.append(Paragraph("<b>Form Question:</b> <i>Did the competition do anything really well, or are there any ways to improve?</i>", h2_style))
 
