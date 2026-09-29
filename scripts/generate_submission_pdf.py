@@ -252,6 +252,27 @@ def build_pdf(filename):
         "and voiceover dialogue below. Every scene details what to type, what appears on screen, what lines to highlight, and what to say.", body_style))
     story.append(Spacer(1, 4))
 
+    # Critical Environment Instruction Box
+    venv_alert_data = [[
+        Paragraph("<b>⚠️ CRITICAL ENVIRONMENT INSTRUCTION (PREVENTS 'No module named pydantic'):</b><br/>"
+                  "All scripts require the virtual environment. To guarantee smooth execution, use either method:<br/>"
+                  "• <b>METHOD 1 (Recommended — Foolproof 1-Click Scripts):</b><br/>"
+                  "&nbsp;&nbsp;<code>./run_wizard.sh</code> &nbsp;|&nbsp; <code>./run_demo.sh</code> &nbsp;|&nbsp; <code>./run_tests.sh</code> (Auto-activates virtual environment)<br/>"
+                  "• <b>METHOD 2 (Manual Activation):</b><br/>"
+                  "&nbsp;&nbsp;<code>source venv/bin/activate</code> then run standard <code>python3 demo.py</code> or <code>pytest -v</code>.", callout_style)
+    ]]
+    venv_alert_table = Table(venv_alert_data, colWidths=[7.0 * inch])
+    venv_alert_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#FEF2F2")),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#FCA5A5")),
+        ('LEFTPADDING', (0,0), (-1,-1), 8),
+        ('RIGHTPADDING', (0,0), (-1,-1), 8),
+        ('TOPPADDING', (0,0), (-1,-1), 6),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+    ]))
+    story.append(venv_alert_table)
+    story.append(Spacer(1, 6))
+
     def render_scene_box(scene_id, time_range, title, cmd_block, screen_actions, dialogue_text, pro_tip):
         card_content = []
         
@@ -321,8 +342,10 @@ def build_pdf(filename):
     # SCENE 2
     story.append(render_scene_box(
         "SCENE 2", "00:30 – 01:00 (30s)", "Hindsight-First Setup Wizard & Pre-Flight Triad",
-        "# Launch interactive setup wizard<br/>"
-        "python3 -m src.setup_wizard",
+        "# Option 1 (Recommended 1-Click):<br/>"
+        "./run_wizard.sh<br/>"
+        "# Option 2 (Manual):<br/>"
+        "source venv/bin/activate && python3 -m src.setup_wizard",
         "• Watch setup wizard terminal output progress in real time.<br/>"
         "• <b>Highlight with mouse:</b><br/>"
         "  1. <code>Host Agent: ✓ Google Jules detected</code><br/>"
@@ -343,8 +366,10 @@ def build_pdf(filename):
     # SCENE 3
     story.append(render_scene_box(
         "SCENE 3", "01:00 – 01:45 (45s)", "Deal Ingestion, RETAIN & Zero-Hallucination RECALL",
-        "# Run live 3-minute enterprise demo script<br/>"
-        "python3 demo.py",
+        "# Option 1 (Recommended 1-Click):<br/>"
+        "./run_demo.sh<br/>"
+        "# Option 2 (Manual):<br/>"
+        "source venv/bin/activate && python3 demo.py",
         "• Terminal displays Part 1 & Part 2 live output.<br/>"
         "• Highlight terminal lines:<br/>"
         "  - <code>✓ RETAIN: PASS ✓ (Inscribed Acme Corp security and pricing disclosures)</code><br/>"
@@ -362,7 +387,7 @@ def build_pdf(filename):
     # SCENE 4
     story.append(render_scene_box(
         "SCENE 4", "01:45 – 02:20 (35s)", "Telemetry Pattern Recognition & Adaptive MCP Tool Wiring",
-        "# (Terminal continues running demo.py output)<br/>"
+        "# (Terminal continues running demo output)<br/>"
         "# Scroll terminal window down to Part 5 & 6",
         "• Scroll terminal down to Telemetry Analyzer section.<br/>"
         "• <b>Highlight with mouse:</b><br/>"
@@ -400,8 +425,10 @@ def build_pdf(filename):
     # SCENE 6
     story.append(render_scene_box(
         "SCENE 6", "02:45 – 03:00 (15s)", "Full 20/20 Test Verification & Conclusion",
-        "# Run full automated regression test suite<br/>"
-        "pytest -v<br/>"
+        "# Option 1 (Recommended 1-Click):<br/>"
+        "./run_tests.sh<br/>"
+        "# Option 2 (Manual):<br/>"
+        "source venv/bin/activate && pytest -v<br/>"
         "# Show GitHub repository remote<br/>"
         "git remote -v",
         "• Show terminal executing pytest with 20/20 green passes.<br/>"
