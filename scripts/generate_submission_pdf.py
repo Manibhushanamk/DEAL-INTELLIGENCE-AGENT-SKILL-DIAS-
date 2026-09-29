@@ -254,17 +254,16 @@ def build_pdf(filename):
 
     # Critical Environment Instruction Box
     venv_alert_data = [[
-        Paragraph("<b>⚠️ CRITICAL ENVIRONMENT INSTRUCTION (PREVENTS 'No module named pydantic'):</b><br/>"
-                  "All scripts require the virtual environment. To guarantee smooth execution, use either method:<br/>"
-                  "• <b>METHOD 1 (Recommended — Foolproof 1-Click Scripts):</b><br/>"
-                  "&nbsp;&nbsp;<code>./run_wizard.sh</code> &nbsp;|&nbsp; <code>./run_demo.sh</code> &nbsp;|&nbsp; <code>./run_tests.sh</code> (Auto-activates virtual environment)<br/>"
-                  "• <b>METHOD 2 (Manual Activation):</b><br/>"
-                  "&nbsp;&nbsp;<code>source venv/bin/activate</code> then run standard <code>python3 demo.py</code> or <code>pytest -v</code>.", callout_style)
+        Paragraph("<b>🚀 MASTER 1-COMMAND EXECUTION (RECOMMENDED FOR VIDEO DEMO):</b><br/>"
+                  "DIAS provides an automated all-in-one runner that auto-detects the virtual environment, runs the setup wizard, executes the enterprise deal demo, and generates the final analysis result:<br/>"
+                  "• <b>Fast Video Demo Mode (Under 10s):</b> <code>./run_all.sh --skip-tests</code><br/>"
+                  "• <b>Full Master Pipeline (With 20/20 Tests):</b> <code>./run_all.sh</code><br/>"
+                  "• <b>Modular Runners:</b> <code>./run_wizard.sh</code> &nbsp;|&nbsp; <code>./run_demo.sh</code> &nbsp;|&nbsp; <code>./run_tests.sh</code>", callout_style)
     ]]
     venv_alert_table = Table(venv_alert_data, colWidths=[7.0 * inch])
     venv_alert_table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#FEF2F2")),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#FCA5A5")),
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#EFF6FF")),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#93C5FD")),
         ('LEFTPADDING', (0,0), (-1,-1), 8),
         ('RIGHTPADDING', (0,0), (-1,-1), 8),
         ('TOPPADDING', (0,0), (-1,-1), 6),
@@ -324,121 +323,110 @@ def build_pdf(filename):
 
     # SCENE 1
     story.append(render_scene_box(
-        "SCENE 1", "00:00 – 00:30 (30s)", "The Hook & The Stateless Agent Problem",
-        "# 1. Clean terminal and verify active directory<br/>"
-        "cd /home/kmanib/deal-intelligence-skill && clear<br/>"
-        "# 2. Show repository layout<br/>"
+        "SCENE 1", "00:00 – 00:25 (25s)", "The Hook & The Stateless Agent Problem",
+        "# 1. Navigate to repository directory<br/>"
+        "cd ~/deal-intelligence-skill && clear<br/>"
+        "# 2. Show clean directory structure<br/>"
         "ls -la",
-        "• Split screen: Terminal on right, GitHub README on left.<br/>"
-        "• Camera on face (optional) or full screen recording.<br/>"
-        "• Highlight problem in README: <i>'Traditional AI coding agents are stateless execution units that forget everything on Day 1.'</i>",
+        "• Split screen: Clean terminal on right, GitHub repository on left.<br/>"
+        "• Camera on face (optional) or full screen desktop recording.<br/>"
+        "• Point mouse at the core dilemma: AI coding agents lose all context between sessions.",
         "Hi everyone! I'm Manibhushanam, and this is <b>DIAS — Deal Intelligence Agent Skill</b>.<br/><br/>"
-        "Today, autonomous AI coding agents are stateless execution units. Every time you open a new session, it's Day 1 all over again: "
-        "they forget customer requirements, ignore past compliance constraints, and operate with rigid, hard-coded tools.<br/><br/>"
+        "Today, autonomous AI coding agents are stateless. Every time you start a session, it's Day 1 all over again: "
+        "they forget customer mandates, ignore compliance history, and operate with rigid tools.<br/><br/>"
         "We solved this by giving host coding agents a permanent cognitive brain powered by <b>Vectorize Hindsight Cloud</b>.",
-        "Start with high energy! Point your cursor at the equation in README: <code>PERSISTENT MEMORY + DEAL INTELLIGENCE + ADAPTIVE MCP = LEARNING AGENT</code>."
+        "Start with confident, energetic delivery. Keep terminal clear and ready for the 1-command launch."
     ))
 
     # SCENE 2
     story.append(render_scene_box(
-        "SCENE 2", "00:30 – 01:00 (30s)", "Hindsight-First Setup Wizard & Pre-Flight Triad",
-        "# Option 1 (Recommended 1-Click):<br/>"
-        "./run_wizard.sh<br/>"
-        "# Option 2 (Manual):<br/>"
-        "source venv/bin/activate && python3 -m src.setup_wizard",
-        "• Watch setup wizard terminal output progress in real time.<br/>"
+        "SCENE 2", "00:25 – 01:10 (45s)", "1-Command Launch & Live Enterprise Deal Analysis",
+        "# Run the master pipeline in fast video mode:<br/>"
+        "./run_all.sh --skip-tests",
+        "• Terminal runs Stage 1 (Setup Wizard) and Stage 2 (Enterprise Demo) live.<br/>"
         "• <b>Highlight with mouse:</b><br/>"
         "  1. <code>Host Agent: ✓ Google Jules detected</code><br/>"
-        "  2. <code>Connecting to Hindsight Cloud with key: hsk_...50fc</code> (zero-leak masking)<br/>"
+        "  2. <code>Hindsight API Key: hsk_...50fc (Masked, Zero-Leak)</code><br/>"
         "  3. <code>Pre-Flight Triad: RETAIN: ✓ Passed | RECALL: ✓ Passed | REFLECT: ✓ Passed</code><br/>"
-        "  4. <code>✓ Hindsight Memory: READY (Triad 100% Operational)</code>",
-        "DIAS starts with a strict <b>Hindsight-First initialization protocol</b>. Watch our setup wizard auto-detect the host agent — "
-        "Google Jules, OpenClaw, or Antigravity.<br/><br/>"
-        "Notice how it pings Vectorize Hindsight Cloud with zero credential leakage — the API key is safely masked as <code>hsk_...50fc</code>. "
-        "It provisions two dedicated memory banks: <code>dias_deals</code> and <code>dias_telemetry</code>. "
-        "Before any secondary tools are configured, it validates a pre-flight triad: Retain, Recall, and Reflect. "
-        "Only when memory is 100% operational does the agent launch.",
-        "Pause for 2 seconds after the green checkmarks appear so viewers can read the verified triad output before you clear or proceed."
+        "  4. <code>Live Enterprise Deal: Acme Corp ($350k ARR, 150 seats)</code><br/>"
+        "  5. <code>👉 RECOMMENDED MCP: Neon PostgreSQL MCP (Impact: 95/100)</code>",
+        "With a single command, <code>./run_all.sh</code>, DIAS kicks off.<br/><br/>"
+        "First, our setup wizard auto-detects the host environment — Google Jules, OpenClaw, or Antigravity. "
+        "It authenticates with Vectorize Hindsight Cloud using zero-leak key masking, provisions our two dedicated memory banks, "
+        "and validates a pre-flight triad: Retain, Recall, and Reflect.<br/><br/>"
+        "Then DIAS processes an enterprise deal: <b>Acme Corp</b>, a $350,000 ARR contract with Gong.io competition. "
+        "Notice how our telemetry engine detects relational SQL friction and dynamically recommends the Neon PostgreSQL MCP!",
+        "Let the terminal stream smoothly. Point your mouse at the green checkmarks as they appear."
     ))
 
     story.append(PageBreak())
 
     # SCENE 3
     story.append(render_scene_box(
-        "SCENE 3", "01:00 – 01:45 (45s)", "Deal Ingestion, RETAIN & Zero-Hallucination RECALL",
-        "# Option 1 (Recommended 1-Click):<br/>"
-        "./run_demo.sh<br/>"
-        "# Option 2 (Manual):<br/>"
-        "source venv/bin/activate && python3 demo.py",
-        "• Terminal displays Part 1 & Part 2 live output.<br/>"
-        "• Highlight terminal lines:<br/>"
-        "  - <code>✓ RETAIN: PASS ✓ (Inscribed Acme Corp security and pricing disclosures)</code><br/>"
-        "  - <code>✓ RECALL: PASS ✓ (Surfaced 2 memories; source: hindsight_cloud)</code><br/>"
-        "• <b>Browser Switch (at 01:25):</b> Switch to browser tab at <code>https://ui.hindsight.vectorize.io/dashboard</code>. "
-        "Show <code>dias_deals</code> bank containing stored memories with timestamps and embeddings.",
-        "Now let's run our live enterprise demo for <b>Acme Corp</b>, a $350,000 ARR contract in negotiation.<br/><br/>"
-        "Watch DIAS execute a live <b>RETAIN</b> call. It inscribes critical buyer disclosures into Hindsight Cloud: "
-        "Acme mandates AWS GovCloud, Okta SSO with SAML 2.0, and SOC2 compliance, while Gong.io is pitching a 20% discount.<br/><br/>"
-        "Instantly, DIAS executes a semantic <b>RECALL</b>. Instead of generic LLM hallucination, the agent grounds its reasoning in exact customer facts. "
-        "Look at the Hindsight Cloud dashboard — the memories are persisted live in the cloud!",
-        "Switching to the browser tab showing the real Hindsight Cloud UI proves to judges that the memory is live and not a local stub."
+        "SCENE 3", "01:10 – 01:45 (35s)", "Terminal Scroll: Project Result Analysis & Executive PDF",
+        "# 1. Scroll through terminal to show Project Result banner<br/>"
+        "# 2. Open and showcase the generated C-Level Deal Dossier PDF<br/>"
+        "xdg-open acme_corp_deal_dossier.pdf",
+        "• Scroll terminal window up and down to display the complete analysis.<br/>"
+        "• Highlight the <b>PROJECT RESULT</b> section on screen:<br/>"
+        "  - <code>Deal Health Score: 85.0 / 100 (EXCELLENT)</code><br/>"
+        "  - <code>Win Probability: 78.2% (High Confidence)</code><br/>"
+        "  - <code>AWS GovCloud Mandate + Okta SAML 2.0 (Resolved)</code><br/>"
+        "• Switch to <code>acme_corp_deal_dossier.pdf</code> open in document viewer.<br/>"
+        "• Show diagnostic radar bars, SWOT analysis, and Gong competitor battlecard.",
+        "Let's look at the result of the analysis: DIAS calculates an overall deal health of <b>85.0 out of 100</b> "
+        "and a <b>78.2% win probability</b> across 4 diagnostic vectors.<br/><br/>"
+        "It resolved Acme's mandatory AWS GovCloud and Okta SAML 2.0 requirements, and built an objection defense against Gong.<br/><br/>"
+        "Best of all, DIAS compiled this publication-grade C-level PDF deal dossier on the fly with full SWOT matrix and competitor battlecards!",
+        "Slowly scroll down Page 1 to Page 2 of the PDF so the radar bars, competitor battlecards, and SWOT layout are clearly visible."
     ))
 
     # SCENE 4
     story.append(render_scene_box(
-        "SCENE 4", "01:45 – 02:20 (35s)", "Telemetry Pattern Recognition & Adaptive MCP Tool Wiring",
-        "# (Terminal continues running demo output)<br/>"
-        "# Scroll terminal window down to Part 5 & 6",
-        "• Scroll terminal down to Telemetry Analyzer section.<br/>"
-        "• <b>Highlight with mouse:</b><br/>"
-        "  - <code>[TELEMETRY] Detected pattern: 3+ relational SQL database queries</code><br/>"
-        "  - <code>[HINDSIGHT REFLECT] Workflow friction identified: inspecting schema manually</code><br/>"
-        "  - <code>👉 RECOMMENDED MCP: Neon PostgreSQL MCP (Score: 95/100)</code><br/>"
-        "  - <code>[ADAPTIVE MCP] Dynamically wired @neondatabase/mcp-server</code>",
-        "Here is where DIAS does something revolutionary: <b>it learns what tools it needs</b>.<br/><br/>"
-        "Our second memory bank, <code>dias_telemetry</code>, tracks operator interaction patterns. It detected that the developer executed "
-        "3 relational SQL queries manually. DIAS calls <b>Hindsight REFLECT</b>, discovers the workflow friction, and proactively recommends "
-        "wiring the <b>Neon Serverless PostgreSQL MCP</b> with an impact score of 95 out of 100.<br/><br/>"
-        "With human-in-the-loop sign-off, the agent dynamically upgrades its own capabilities.",
-        "Emphasize the human-in-the-loop aspect: DIAS suggests tools autonomously, but always asks for human approval before network wiring."
+        "SCENE 4", "01:45 – 02:25 (40s)", "Vectorize Hindsight Cloud: Live Usage & Memory Banks",
+        "# Switch browser to Hindsight Cloud live interface:<br/>"
+        "# Tab 1: https://ui.hindsight.vectorize.io/usage<br/>"
+        "# Tab 2: https://ui.hindsight.vectorize.io/dashboard",
+        "• <b>Switch to Browser Tab 1:</b> <code>https://ui.hindsight.vectorize.io/usage</code><br/>"
+        "  Show live API request volume, token usage, and real-time operations graph.<br/>"
+        "• <b>Switch to Browser Tab 2:</b> <code>https://ui.hindsight.vectorize.io/dashboard</code><br/>"
+        "  Click into <code>dias_deals</code> memory bank.<br/>"
+        "  Show actual Acme Corp memory nodes, timestamps, and reflected strategic insights.",
+        "Now let's verify where this cognitive intelligence lives: here in <b>Vectorize Hindsight Cloud</b>.<br/><br/>"
+        "On the Usage screen, you can see the real-time API operations and token throughput generated by our demo.<br/><br/>"
+        "And in the Dashboard under our <code>dias_deals</code> memory bank, here are the actual persisted memories: "
+        "Acme's GovCloud mandate, Okta SSO requirements, and the synthesized reflection summary. "
+        "This proves DIAS doesn't rely on ephemeral state — it has a true cloud-native cognitive brain.",
+        "Keep the browser zoomed to 110% so the memory cards, timestamps, and Vectorize logos are sharp and legible."
     ))
 
     # SCENE 5
     story.append(render_scene_box(
-        "SCENE 5", "02:20 – 02:45 (25s)", "Multi-Vector Deal Analytics & C-Level PDF Dossier",
-        "# Inspect and open compiled executive PDF dossier<br/>"
-        "ls -lh acme_corp_deal_dossier.pdf<br/>"
-        "xdg-open acme_corp_deal_dossier.pdf",
-        "• Open <code>acme_corp_deal_dossier.pdf</code> in document viewer.<br/>"
-        "• Zoom in on the 4 diagnostic radar vectors:<br/>"
-        "  - Momentum: 24.0 / 25 | Stakeholders: 20.0 / 25<br/>"
-        "  - Technical Alignment: 22.0 / 25 | Commercial: 19.0 / 25<br/>"
-        "  - Total Deal Health: <b>85.0 / 100</b> | Win Probability: <b>78.2%</b><br/>"
-        "• Show SWOT Matrix and Gong.io competitor battlecards.",
-        "DIAS then computes multi-vector deal analytics across four 25-point dimensions: Momentum at 24, Stakeholders at 20, "
-        "Technical at 22, and Commercial at 19. Total deal health is <b>85.0 out of 100</b> with a <b>78.2% win probability</b>.<br/><br/>"
-        "Rather than just printing text in a console, DIAS automatically compiles a publication-grade C-level PDF deal dossier "
-        "complete with SWOT analysis and competitor battlecards, and stages follow-up actions safely in draft mode.",
-        "Slowly scroll down Page 1 to Page 2 of the PDF so the radar bars, competitor battlecards, and SWOT layout are clearly visible."
+        "SCENE 5", "02:25 – 02:50 (25s)", "GitHub README Walkthrough & Architecture",
+        "# Switch browser to public GitHub repository:<br/>"
+        "# URL: https://github.com/Manibhushanamk/DEAL-INTELLIGENCE-AGENT-SKILL-DIAS-",
+        "• Open repository README in browser.<br/>"
+        "• Highlight the <b>Continuous Learning Curve</b> diagram (Day 1 ➔ Day 5 ➔ Day 20+).<br/>"
+        "• Highlight the <b>1-Command Quick Start</b> code box so judges see how easy reproduction is.<br/>"
+        "• Briefly show the 8 MCP tool definitions and test badges.",
+        "Everything in DIAS is open-source and judge-ready on GitHub.<br/><br/>"
+        "Our README details the full cognitive architecture, our two-dimensional memory design, and the adaptive MCP router.<br/><br/>"
+        "Most importantly, any developer or judge can clone the repository and reproduce this entire pipeline with a single command: "
+        "<code>./run_all.sh</code>.",
+        "Scroll at a steady pace through the README. Pause on the architecture diagram and the 1-command quick start."
     ))
 
     # SCENE 6
     story.append(render_scene_box(
-        "SCENE 6", "02:45 – 03:00 (15s)", "Full 20/20 Test Verification & Conclusion",
-        "# Option 1 (Recommended 1-Click):<br/>"
-        "./run_tests.sh<br/>"
-        "# Option 2 (Manual):<br/>"
-        "source venv/bin/activate && pytest -v<br/>"
-        "# Show GitHub repository remote<br/>"
-        "git remote -v",
-        "• Show terminal executing pytest with 20/20 green passes.<br/>"
-        "• Highlight: <code>============================= 20 passed in 44.43s ==============================</code><br/>"
-        "• Display open-source GitHub repository URL on screen.",
-        "Every single component in DIAS is verified: <b>20 out of 20 automated regression tests pass in under 45 seconds</b>, "
-        "testing key masking, live memory, adaptive routing, and failure recovery.<br/><br/>"
-        "DIAS proves that when AI agents are equipped with persistent cognitive memory and adaptive MCP routing, they don't just execute instructions — "
-        "they continuously learn, adapt, and evolve. Check out our GitHub repository in the description below. Thank you!",
-        "End with the terminal showing the green '20 passed' banner and the GitHub link. Leave on screen for 2-3 seconds as you conclude."
+        "SCENE 6", "02:50 – 03:00 (10s)", "Test Verification (20/20) & Closing Call to Action",
+        "# Quick terminal verification:<br/>"
+        "./run_tests.sh",
+        "• Show terminal with 20/20 green pytest passes.<br/>"
+        "• Highlight: <code>==================== 20 passed in 50s ====================</code><br/>"
+        "• Display GitHub repository link on screen.",
+        "With 20 out of 20 verified tests passing, DIAS shows how persistent memory transforms AI agents into self-improving partners.<br/><br/>"
+        "Check out our repository at github.com/Manibhushanamk/DEAL-INTELLIGENCE-AGENT-SKILL-DIAS-. Thank you!",
+        "End on the green 20/20 test pass banner or the GitHub homepage as your final screen."
     ))
 
     story.append(Spacer(1, 6))
