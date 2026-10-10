@@ -70,8 +70,10 @@ class GoogleAuthManager:
 
     def _discover_client_secret(self) -> None:
         """Finds desktop app client secret JSON file in standard locations."""
+        repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         candidates = [
             os.path.join(os.getcwd(), "client_secret.json"),
+            os.path.join(repo_root, "client_secret.json"),
             "/home/kmanib/Documents/HACK WITH HYD/client_secret_2243912223-6v1q7u4nmebrgjlmmdrgshsuhrig001s.apps.googleusercontent.com.json",
             os.path.expanduser("~/client_secret.json"),
         ]

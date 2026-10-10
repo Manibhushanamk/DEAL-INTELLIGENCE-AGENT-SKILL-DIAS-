@@ -81,10 +81,11 @@ class NormalizedDealProfile:
             self.verified_facts.append("Customer identified as Acme Corp")
 
         # 3. Contract value extraction
-        val_match = re.search(r'[\$€£]\s*([0-9,]+(?:\.[0-9]+)?)\s*([kmbKMB]|thousand|million)?', text, re.IGNORECASE)
+        val_match = re.search(r'(?:[\$€£]|usd\s*)?\s*([0-9,]+(?:\.[0-9]+)?)\s*([kmbKMB]|thousand|million)\b|[\$€£]\s*([0-9,]+(?:\.[0-9]+)?)', text, re.IGNORECASE)
         if val_match:
             try:
-                base_val = float(val_match.group(1).replace(',', ''))
+                num_str = val_match.group(1) or val_match.group(3)
+                base_val = float(num_str.replace(',', ''))
                 mult = (val_match.group(2) or '').lower()
                 if mult.startswith('k') or mult == 'thousand':
                     base_val *= 1000

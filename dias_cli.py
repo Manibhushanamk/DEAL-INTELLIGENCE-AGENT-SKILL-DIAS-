@@ -195,7 +195,35 @@ def main():
 
     if args.command == "/dias-input-end":
         res = controller.handle_dias_input_end_command()
-        print(json.dumps(res, indent=2))
+        print("\n" + "=" * 70)
+        print(f"  DIAS ANALYSIS COMPLETE — {res.get('customer')}")
+        print("=" * 70)
+        print(f"  • Health Score:    {res.get('health_score')}")
+        print(f"  • Win Probability: {res.get('win_probability')}")
+        print("\n[DELIVERABLES GENERATED]")
+        deliv = res.get("deliverables", {})
+        print(f"  📄 Executive PDF:   {deliv.get('pdf_dossier')}")
+        print(f"  📝 Google Doc:      {deliv.get('google_doc')}")
+        print(f"  📊 Master Sheet:    {deliv.get('master_google_sheet')}")
+        print(f"  ✉️  Gmail Draft:     {deliv.get('gmail_draft')}")
+        print(f"  📅 Calendar Hold:   {deliv.get('calendar_hold')}")
+        print("\n[PERSISTENCE VERIFICATION]")
+        persist = res.get("persistence", {})
+        print(f"  🗄️  Neon DB:         {persist.get('neon_postgresql')}")
+        print(f"  🧠 Hindsight Cloud: {persist.get('hindsight_cloud')}")
+        print("=" * 70 + "\n")
+        return
+
+    if args.command in ("/status", "status"):
+        integ = controller.check_integrations()
+        print(format_integrations_report(integ))
+        print(format_deal_profile(controller.profile.to_dict()))
+        return
+
+    if args.command in ("/oauth", "oauth"):
+        print("[DIAS OAuth] Initiating Google Workspace OAuth Desktop authorization flow...")
+        oauth_res = controller.google.auth.initiate_authorization_flow(open_browser=True)
+        print(f"OAuth Status: {oauth_res.get('status')} | Message: {oauth_res.get('message')}")
         return
 
     # Interactive mode

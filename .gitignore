@@ -14,3 +14,5 @@ venv
 *.pdf
 token.json
 reports/
+.dias_session
+client_secret*.json

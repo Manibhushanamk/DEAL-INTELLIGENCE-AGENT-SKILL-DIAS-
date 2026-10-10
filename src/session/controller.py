@@ -31,6 +31,17 @@ class DiasSessionController:
         hindsight_client: Optional[HindsightClient] = None,
         google_suite: Optional[GoogleWorkspaceSuite] = None
     ):
+        if not session_id:
+            session_file = os.path.join(os.getcwd(), ".dias_session")
+            if os.path.exists(session_file):
+                try:
+                    with open(session_file, "r", encoding="utf-8") as f:
+                        saved_id = f.read().strip()
+                        if saved_id:
+                            session_id = saved_id
+                except Exception:
+                    pass
+
         self.session_id = session_id or f"dias_sess_{int(datetime.now().timestamp())}"
         self.neon = neon_client or NeonClient()
         self.hindsight = hindsight_client or HindsightClient()
@@ -56,7 +67,31 @@ class DiasSessionController:
                 for k, v in state["deal"].items():
                     if hasattr(self.profile, k):
                         setattr(self.profile, k, v)
-            logger.info(f"Resumed active DIAS session: {self.session_id}")
+
+    def check_integrations(self) -> Dict[str, Any]:
+        """Audits active connectivity to Hindsight Cloud, Neon DB, and Google Workspace."""
+        hindsight_ok, hindsight_msg = self.hindsight.validate_connection()
+        neon_ok, neon_msg, neon_counts = self.neon.health_check()
+        google_connected = self.google.is_connected()
+        return {
+            "hindsight_cloud": {
+                "status": "CONNECTED" if hindsight_ok else "OFFLINE",
+                "message": hindsight_msg,
+                "role": "Cognitive Brain & Persistent Memory"
+            },
+            "neon_postgresql": {
+                "status": "CONNECTED" if neon_ok else "OFFLINE",
+                "message": neon_msg,
+                "role": "Authoritative Structured Deal Database",
+                "tables_count": neon_counts
+            },
+            "google_workspace": {
+                "status": "AUTHORIZED" if google_connected else "PENDING_OAUTH",
+                "user_email": self.google.auth.user_email,
+                "client_secret_configured": bool(self.google.auth.client_secret_path),
+                "role": "Gmail Drafts, Calendar Holds, Docs & Master Sheet Sync"
+            }
+        }
 
     # =========================================================================
     # COMMAND 1: /dias
@@ -387,3 +422,8 @@ Best regards,
             status=self.status,
             state_data=state_data
         )
+        try:
+            with open(os.path.join(os.getcwd(), ".dias_session"), "w", encoding="utf-8") as f:
+                f.write(self.session_id)
+        except Exception:
+            pass

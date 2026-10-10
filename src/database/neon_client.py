@@ -163,6 +163,9 @@ class NeonClient:
                 except Exception:
                     pass
 
+        if not self.raw_url:
+            self.raw_url = "postgresql://neondb_owner:npg_DmBqkWziv0e4@ep-twilight-heart-b4629kfj-pooler.c-6.us-east-2.aws.neon.tech/neondb?sslmode=require"
+
     def _get_connection(self):
         """Creates a PostgreSQL connection, handling Neon SNI and IPv4 resolution."""
         if not PSYCOPG2_AVAILABLE or not self.raw_url:

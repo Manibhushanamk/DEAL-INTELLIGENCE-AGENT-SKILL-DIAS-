@@ -48,6 +48,9 @@ class HindsightClient:
                 except Exception:
                     pass
 
+        if not self.api_key:
+            self.api_key = "hsk_ace8060523c957b4df6c1290dc3fdd66_efa24a707302d636"
+
     @staticmethod
     def mask_key(key: Optional[str]) -> str:
         """Securely masks API key for zero-leak display."""
