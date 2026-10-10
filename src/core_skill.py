@@ -10,20 +10,49 @@ from src.dossier.pdf_generator import PDFDossierGenerator
 from src.telemetry_analyzer import TelemetryAnalyzer
 from mcp.adaptive_router import AdaptiveRouter
 
+from src.database.neon_client import NeonClient
+from src.session.controller import DiasSessionController
+
 class DealIntelligenceSkill:
     """
     Unified controller and cognitive engine for Deal Intelligence Agent Skill (DIAS).
-    Coordinates Hindsight Cloud persistent memory, multi-vector deal health scoring,
+    Coordinates Hindsight Cloud persistent memory, Neon Serverless PostgreSQL persistence,
+    Google Workspace OAuth and APIs, multi-vector deal health scoring,
     executive PDF compilation, workspace action staging, and adaptive MCP routing.
     """
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, db_url: Optional[str] = None):
         self.memory = HindsightClient(api_key=api_key)
+        self.neon = NeonClient(db_url=db_url)
         self.scorer = DealScorer()
         self.battlecards = BattlecardEngine()
         self.workspace = WorkspaceManager()
         self.dossier = PDFDossierGenerator()
         self.telemetry = TelemetryAnalyzer(self.memory)
         self.router = AdaptiveRouter(self.memory, self.telemetry)
+        self.session_controller = DiasSessionController(
+            neon_client=self.neon,
+            hindsight_client=self.memory,
+            google_suite=self.workspace.google_suite
+        )
+
+    # 0. User-Facing Commands (/dias & /dias-input-end)
+    def dias(self, user_input: Optional[str] = None, deal_id: Optional[str] = None, file_path: Optional[str] = None, interactive_oauth: bool = False) -> Dict[str, Any]:
+        """Executes /dias command: initializes session, verifies integrations & OAuth, collects deal data."""
+        self.telemetry.record_interaction(query=f"command /dias: {user_input or deal_id or ''}", tool_invoked="/dias")
+        return self.session_controller.handle_dias_command(
+            user_input=user_input,
+            deal_id=deal_id,
+            file_path=file_path,
+            interactive_oauth=interactive_oauth
+        )
+
+    def dias_input_end(self, clarifications: Optional[Dict[str, Any]] = None, confirm_send_email: bool = False) -> Dict[str, Any]:
+        """Executes /dias-input-end command: runs analysis, produces deliverables, and persists to Neon & Hindsight."""
+        self.telemetry.record_interaction(query="command /dias-input-end", tool_invoked="/dias-input-end")
+        return self.session_controller.handle_dias_input_end_command(
+            clarifications=clarifications,
+            confirm_send_email=confirm_send_email
+        )
 
     # 1. Cognitive Memory Operations (Hindsight Cloud)
     def memory_retain(self, namespace: str = "dias_deals", key: str = "deal_fact", data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:

@@ -133,38 +133,42 @@ class HindsightClient:
         cloud_persisted = False
         error_msg = None
         if self.api_key and not self.api_key.startswith("mock_"):
-            try:
-                self._ensure_bank_exists(bank_id)
-                url = f"{self.base_url}/v1/default/banks/{bank_id}/memories"
-                headers = {
-                    "Content-Type": "application/json",
-                    "Authorization": f"Bearer {self.api_key}"
-                }
-                content_text = data.get("content") or json.dumps(data)
-                cloud_payload = {
-                    "items": [
-                        {
-                            "content": content_text,
-                            "document_id": key,
-                            "context": data.get("event_type", "dias_interaction")
-                        }
-                    ],
-                    "async": False
-                }
-                req = urllib.request.Request(
-                    url,
-                    data=json.dumps(cloud_payload).encode("utf-8"),
-                    headers=headers,
-                    method="POST"
-                )
-                with urllib.request.urlopen(req, timeout=20) as resp:
-                    if resp.status in (200, 201):
-                        res_json = json.loads(resp.read().decode("utf-8"))
-                        if res_json.get("success") is True:
-                            cloud_persisted = True
-            except Exception as e:
-                error_msg = str(e)
-                logger.debug(f"[Hindsight Cloud] Cloud retain notice: {e}")
+            import time
+            for attempt in range(2):
+                try:
+                    self._ensure_bank_exists(bank_id)
+                    url = f"{self.base_url}/v1/default/banks/{bank_id}/memories"
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {self.api_key}"
+                    }
+                    content_text = data.get("content") or json.dumps(data)
+                    cloud_payload = {
+                        "items": [
+                            {
+                                "content": content_text,
+                                "document_id": key,
+                                "context": data.get("event_type", "dias_interaction")
+                            }
+                        ],
+                        "async": False
+                    }
+                    req = urllib.request.Request(
+                        url,
+                        data=json.dumps(cloud_payload).encode("utf-8"),
+                        headers=headers,
+                        method="POST"
+                    )
+                    with urllib.request.urlopen(req, timeout=30) as resp:
+                        if resp.status in (200, 201):
+                            res_json = json.loads(resp.read().decode("utf-8"))
+                            if res_json.get("success") is True:
+                                cloud_persisted = True
+                                break
+                except Exception as e:
+                    error_msg = str(e)
+                    logger.warning(f"[Hindsight Cloud] Cloud retain notice (attempt {attempt+1}): {e}")
+                    time.sleep(1)
 
         # 2. Local resilient store
         if bank_id not in self._memory_store:

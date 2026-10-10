@@ -100,7 +100,9 @@ class DealScorer:
 
         return {
             "overall_health_score": total_health,
+            "health_score": total_health,
             "win_probability_pct": win_probability,
+            "win_probability": win_probability,
             "health_tier": health_tier,
             "color_hex": color_hex,
             "vectors": {
@@ -109,7 +111,15 @@ class DealScorer:
                 "technical_alignment": {"score": technical_score, "max": 25.0},
                 "commercial_feasibility": {"score": commercial_score, "max": 25.0}
             },
+            "breakdown": {
+                "budget_score": commercial_score * 4.0,
+                "authority_score": stakeholder_score * 4.0,
+                "need_score": momentum_score * 4.0,
+                "timeline_score": technical_score * 4.0,
+                "competition_score": max(20.0, 100.0 - (len(risks) * 20.0))
+            },
             "risk_factors": risks,
             "growth_opportunities": opportunities,
+            "uncertainty_explanation": "Confidence score 85%. Multi-vector heuristic based on customer notes and Hindsight historical memories. Not an absolute statistical certainty.",
             "next_recommended_action": "Execute executive follow-up with customized compliance dossier and stage procurement review session."
         }
