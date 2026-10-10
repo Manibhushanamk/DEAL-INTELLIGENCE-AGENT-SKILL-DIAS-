@@ -20,15 +20,18 @@ Invoke this skill whenever:
 
 ---
 
-## 2. Command Flow & Lifecycle
+## 2. Coding Agent Native Execution & Command Lifecycle
 
-The skill operates through two core commands:
+> [!NOTE]
+> **Native Agent Integration:** In AI coding agents like **Google Antigravity CLI**, Claude Code, Cursor, or Jules, **the chat conversation is the main interface**. The user does NOT need to run terminal commands manually.
+> The agent executes all backend operations autonomously in the background, asks targeted discovery questions directly to the user in chat, and delivers the full Google Workspace, PDF, and database results in one go.
+> All API credentials (Neon PostgreSQL, Vectorize Hindsight, Google OAuth Desktop Client) are stored directly in the Neon PostgreSQL database (`dias_api_vault`), enabling instant zero-configuration execution.
 
 ```
-[User invokes /dias] ──> [Audit Integrations & OAuth] ──> [Collect Notes & Q&A]
-                                                                  │
-                                                                  ▼
-[User invokes /dias-input-end] ──> [Score Deal] ──> [Google Workspace & PDF] ──> [Neon & Hindsight]
+[User invokes /dias in Chat] ──> [Agent executes Backend & Audits APIs] ──> [Agent asks Discovery Questions]
+                                                                                     │
+                                                                                     ▼
+[User answers / concludes]   ──> [Agent executes /dias-input-end]       ──> [Full Google & DB Deliverables Delivered]
 ```
 
 ### Command 1: `/dias` (Start / Resume Session)
@@ -36,17 +39,15 @@ The skill operates through two core commands:
 When the user enters `/dias` or provides initial deal notes:
 
 1. **Verify Integrations & Google OAuth**:
-   - Check if Google Workspace OAuth is authorized.
-   - If not yet authorized, launch the OAuth flow:
+   - Check if Google Workspace OAuth is authorized (loaded from token or Neon DB `dias_api_vault`).
+   - If not yet authorized, launch or guide the OAuth consent flow:
      ```bash
      python3 dias_cli.py /oauth
      ```
-     This opens the Google sign-in consent browser for Gmail, Calendar, Docs, Sheets, and Drive scopes.
-   - Neon PostgreSQL and Vectorize Hindsight Cloud are pre-configured with embedded fallbacks and require no extra setup.
+   - Neon PostgreSQL and Vectorize Hindsight Cloud are pre-configured, verified, and backed by the database API vault.
 
 2. **Ingest Deal Context**:
-   - Ingest user input, pasted notes, emails, transcripts, or deal IDs.
-   - Execute:
+   - Ingest user notes, pasted emails, transcripts, or deal IDs directly in the backend:
      ```bash
      python3 dias_cli.py /dias --input "<user_input_or_notes>"
      ```
@@ -57,8 +58,8 @@ When the user enters `/dias` or provides initial deal notes:
      - **Unknowns**: Crucial missing fields (e.g., Economic Buyer, Target Close Date).
 
 3. **Targeted Discovery Questions**:
-   - Present the current deal profile to the user.
-   - Ask only high-leverage questions to resolve essential unknowns (e.g., "Who is the Economic Buyer / CFO?" or "What is the targeted close date?").
+   - Present the current deal profile to the user directly in the chat.
+   - Ask high-leverage questions to resolve essential unknowns (e.g., "Who is the Economic Buyer / CFO?" or "What is the targeted close date?").
 
 ---
 

@@ -27,6 +27,21 @@ class HindsightClient:
         self._created_banks = set()
 
     def _load_fallback_env(self) -> None:
+        # Check Neon PostgreSQL api vault directly from database
+        try:
+            from src.database.neon_client import NeonClient
+            neon = NeonClient()
+            db_key = neon.get_api_credential("HINDSIGHT_API_KEY")
+            if db_key:
+                self.api_key = db_key
+            db_base = neon.get_api_credential("HINDSIGHT_BASE_URL")
+            if db_base:
+                self.base_url = db_base.rstrip("/")
+            if self.api_key:
+                return
+        except Exception:
+            pass
+
         candidate_paths = [
             "/home/kmanib/Documents/HACK WITH HYD/Connect to Hindsight https.txt",
             os.path.join(os.getcwd(), ".env"),

@@ -69,21 +69,49 @@ class GoogleAuthManager:
         self._load_and_verify_credentials()
 
     def _discover_client_secret(self) -> None:
-        """Finds desktop app client secret JSON file in standard locations."""
+        """Finds desktop app client secret JSON file in standard locations or Neon DB."""
         repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         candidates = [
             "/home/kmanib/Documents/HACK WITH HYD/client_secret_2243912223-6v1q7u4nmebrgjlmmdrgshsuhrig001s.apps.googleusercontent.com.json",
             os.path.join(os.getcwd(), "client_secret.json"),
             os.path.join(repo_root, "client_secret.json"),
             os.path.expanduser("~/client_secret.json"),
+            "/home/kmanib/DEAL-INTELLIGENCE-AGENT-SKILL-DIAS-/client_secret.json",
+            "/home/kmanib/Documents/HACK WITH HYD/CODE/client_secret.json"
         ]
         for c in candidates:
             if os.path.exists(c):
                 self.client_secret_path = c
                 return
 
+        # Check Neon DB dias_api_vault
+        try:
+            from src.database.neon_client import NeonClient
+            neon = NeonClient()
+            cid = neon.get_api_credential("GOOGLE_CLIENT_ID")
+            csec = neon.get_api_credential("GOOGLE_CLIENT_SECRET")
+            if cid and csec:
+                secret_data = {
+                    "installed": {
+                        "client_id": cid,
+                        "project_id": neon.get_api_credential("GOOGLE_PROJECT_ID") or "dias-workspace-511208",
+                        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                        "token_uri": "https://oauth2.googleapis.com/token",
+                        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                        "client_secret": csec,
+                        "redirect_uris": ["http://localhost"]
+                    }
+                }
+                out_path = os.path.join(os.getcwd(), "client_secret.json")
+                with open(out_path, "w", encoding="utf-8") as f:
+                    json.dump(secret_data, f, indent=2)
+                self.client_secret_path = out_path
+                return
+        except Exception:
+            pass
+
     def _load_and_verify_credentials(self) -> bool:
-        """Loads credentials from token_path and verifies validity."""
+        """Loads credentials from token_path or Neon DB and verifies validity."""
         if not GOOGLE_LIBS_AVAILABLE:
             return False
 
@@ -94,6 +122,21 @@ class GoogleAuthManager:
                 logger.warning(f"Failed to load token.json: {e}")
                 self.creds = None
 
+        # Check Neon DB for stored token if not found locally
+        if not self.creds:
+            try:
+                from src.database.neon_client import NeonClient
+                neon = NeonClient()
+                db_token = neon.get_api_credential("GOOGLE_OAUTH_TOKEN")
+                if db_token:
+                    token_info = json.loads(db_token)
+                    self.creds = Credentials.from_authorized_user_info(token_info, SCOPES)
+                    # Sync to local token_path
+                    with open(self.token_path, "w", encoding="utf-8") as f:
+                        f.write(db_token)
+            except Exception as e:
+                logger.debug(f"No valid token in Neon DB: {e}")
+
         if self.creds and self.creds.valid:
             return self._verify_real_api()
 
@@ -103,6 +146,12 @@ class GoogleAuthManager:
                 self.creds.refresh(Request())
                 with open(self.token_path, "w", encoding="utf-8") as token_file:
                     token_file.write(self.creds.to_json())
+                # Update Neon DB
+                try:
+                    from src.database.neon_client import NeonClient
+                    NeonClient().set_api_credential("GOOGLE_OAUTH_TOKEN", self.creds.to_json(), "Google OAuth user token")
+                except Exception:
+                    pass
                 return self._verify_real_api()
             except Exception as e:
                 logger.warning(f"Failed to refresh token: {e}")
@@ -176,6 +225,11 @@ class GoogleAuthManager:
             if self.creds:
                 with open(self.token_path, "w", encoding="utf-8") as f:
                     f.write(self.creds.to_json())
+                try:
+                    from src.database.neon_client import NeonClient
+                    NeonClient().set_api_credential("GOOGLE_OAUTH_TOKEN", self.creds.to_json(), "Google OAuth user token")
+                except Exception:
+                    pass
                 if self._verify_real_api():
                     return True, f"Successfully authorized Google Workspace for account: {self.user_email}"
                 return False, "Token obtained, but minimal Google API verification check failed."

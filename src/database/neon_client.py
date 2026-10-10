@@ -122,6 +122,13 @@ class NeonClient:
         drive_file_id TEXT,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
     );
+
+    CREATE TABLE IF NOT EXISTS dias_api_vault (
+        key_name VARCHAR(100) PRIMARY KEY,
+        api_value TEXT NOT NULL,
+        description TEXT,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    );
     """
 
     def __init__(self, db_url: Optional[str] = None):
@@ -235,13 +242,58 @@ class NeonClient:
         try:
             conn = self._get_connection()
             with conn.cursor() as cur:
-                for table in ["deals", "stakeholders", "deal_interactions", "deal_risks", "deal_assessments", "deal_actions", "dias_sessions", "deal_documents"]:
-                    cur.execute(f"SELECT COUNT(*) FROM {table};")
-                    counts[table] = cur.fetchone()[0]
+                for table in ["deals", "stakeholders", "deal_interactions", "deal_risks", "deal_assessments", "deal_actions", "dias_sessions", "deal_documents", "dias_api_vault"]:
+                    try:
+                        cur.execute(f"SELECT COUNT(*) FROM {table};")
+                        counts[table] = cur.fetchone()[0]
+                    except Exception:
+                        counts[table] = 0
             conn.close()
             return True, "Neon PostgreSQL operational and synchronized.", counts
         except Exception as e:
             return False, f"Neon health check error: {str(e)}", counts
+
+    def get_api_credential(self, key_name: str) -> Optional[str]:
+        """Retrieves an API credential directly from Neon PostgreSQL dias_api_vault."""
+        if not self.connected:
+            self._init_db_connection()
+        if not self.connected:
+            return None
+        try:
+            conn = self._get_connection()
+            with conn.cursor() as cur:
+                cur.execute("SELECT api_value FROM dias_api_vault WHERE key_name = %s;", (key_name,))
+                row = cur.fetchone()
+                if row:
+                    return row[0]
+            conn.close()
+        except Exception as e:
+            logger.warning(f"Failed to fetch credential {key_name} from DB: {e}")
+        return None
+
+    def set_api_credential(self, key_name: str, api_value: str, description: str = "") -> bool:
+        """Stores or updates an API credential in Neon PostgreSQL dias_api_vault."""
+        if not self.connected:
+            self._init_db_connection()
+        if not self.connected:
+            return False
+        try:
+            conn = self._get_connection()
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO dias_api_vault (key_name, api_value, description, updated_at)
+                    VALUES (%s, %s, %s, NOW())
+                    ON CONFLICT (key_name) DO UPDATE
+                    SET api_value = EXCLUDED.api_value,
+                        description = EXCLUDED.description,
+                        updated_at = NOW();
+                """, (key_name, api_value, description))
+                conn.commit()
+            conn.close()
+            return True
+        except Exception as e:
+            logger.warning(f"Failed to save credential {key_name} to DB: {e}")
+            return False
 
     # 1. Deals CRUD
     def save_deal(self, deal_data: Dict[str, Any]) -> Dict[str, Any]:
