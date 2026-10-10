@@ -117,6 +117,9 @@ class NormalizedDealProfile:
             self.user_claims.append("Client states budget is under review")
 
         # 6. Competition & Incumbents
+        if isinstance(self.competition, str):
+            self.competition = [c.strip() for c in self.competition.split(",") if c.strip() and c.strip().lower() != "none"]
+
         for comp in ["gong", "clari", "salesforce", "hubspot", "outreach", "chorus"]:
             if comp in lower and comp.title() not in self.competition:
                 self.competition.append(comp.title())

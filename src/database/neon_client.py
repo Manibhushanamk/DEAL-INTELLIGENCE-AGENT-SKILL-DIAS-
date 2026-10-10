@@ -144,6 +144,7 @@ class NeonClient:
 
     def _load_fallback_env(self) -> None:
         candidate_paths = [
+            "/home/kmanib/Documents/HACK WITH HYD/Connect to Hindsight https.txt",
             os.path.join(os.getcwd(), ".env"),
             os.path.expanduser("~/deal-intelligence-agent/.env"),
             os.path.expanduser("~/deal-intelligence-skill/.env"),
@@ -160,6 +161,9 @@ class NeonClient:
                                 if val:
                                     self.raw_url = val
                                     return
+                            elif line.startswith("postgresql://"):
+                                self.raw_url = line
+                                return
                 except Exception:
                     pass
 

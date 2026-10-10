@@ -66,6 +66,8 @@ class DiasSessionController:
             if "deal" in state:
                 for k, v in state["deal"].items():
                     if hasattr(self.profile, k):
+                        if k == "competition" and isinstance(v, str):
+                            v = [c.strip() for c in v.split(",") if c.strip() and c.strip().lower() != "none"]
                         setattr(self.profile, k, v)
 
     def check_integrations(self) -> Dict[str, Any]:

@@ -28,6 +28,7 @@ class HindsightClient:
 
     def _load_fallback_env(self) -> None:
         candidate_paths = [
+            "/home/kmanib/Documents/HACK WITH HYD/Connect to Hindsight https.txt",
             os.path.join(os.getcwd(), ".env"),
             os.path.expanduser("~/deal-intelligence-agent/.env"),
             os.path.expanduser("~/deal-intelligence-skill/.env"),
@@ -43,6 +44,11 @@ class HindsightClient:
                                 if val:
                                     self.api_key = val
                                     break
+                            elif line.startswith("hsk_"):
+                                self.api_key = line
+                                break
+                            elif line.startswith("https://api.hindsight"):
+                                self.base_url = line.rstrip("/")
                     if self.api_key:
                         break
                 except Exception:
